@@ -22,12 +22,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function renderDashboard(data) {
-  // 1. Meta Details
+  // 1. Meta Info
   const lastUpdatedEl = document.getElementById('last-updated');
   if (lastUpdatedEl && data.lastUpdated) {
     const formattedDate = new Date(data.lastUpdated).toLocaleString('en-US', {
-      dateStyle: 'medium',
-      timeStyle: 'short'
+      timeZone: 'America/Toronto',
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short'
     });
     lastUpdatedEl.textContent = formattedDate;
   }
@@ -38,16 +43,35 @@ function renderDashboard(data) {
     occupancyEl.textContent = `${adults} Adults, ${children} Children (ages ${childAges.join(', ')})`;
   }
 
-  // 2. Render Cards
-  const curr = data.current || {};
-  if (curr.oct10ToOct12) {
-    renderCard('card-oct10-12', curr.oct10ToOct12);
-  }
-  if (curr.oct9ToOct12) {
-    renderCard('card-oct9-12', curr.oct9ToOct12);
-  }
+  // Normalize properties object
+  const props = data.properties || {
+    bayview: {
+      id: 'bayview',
+      name: 'Bayview Wildwood Resort, an Ascend Collection Resort',
+      shortName: 'Bayview Wildwood Resort',
+      location: 'Severn Bridge, Ontario',
+      bookingUrl: 'https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64',
+      rates: data.current || {}
+    }
+  };
 
-  // 3. Render Historical Chart
+  const bayviewRates = (props.bayview && props.bayview.rates) ? props.bayview.rates : (data.current || {});
+  const grandRates = (props.grandTappattoo && props.grandTappattoo.rates) ? props.grandTappattoo.rates : {};
+
+  // 2. Render Cards
+  if (bayviewRates.oct10ToOct12) renderCard('card-bayview-oct10-12', bayviewRates.oct10ToOct12);
+  if (bayviewRates.oct9ToOct12) renderCard('card-bayview-oct9-12', bayviewRates.oct9ToOct12);
+
+  if (grandRates.oct10ToOct12) renderCard('card-grandTappattoo-oct10-12', grandRates.oct10ToOct12);
+  if (grandRates.oct9ToOct12) renderCard('card-grandTappattoo-oct9-12', grandRates.oct9ToOct12);
+
+  // 3. Highlight Best Deals
+  highlightCheapest(bayviewRates, grandRates);
+
+  // 4. Setup Filter Buttons
+  setupFilters();
+
+  // 5. Render Historical Chart
   if (data.history && data.history.length > 0) {
     renderChart(data.history);
   }
@@ -58,25 +82,21 @@ function renderCard(cardId, item) {
   if (!card) return;
 
   const priceWrapper = card.querySelector('.price-display-wrapper');
-  const nightPriceEl = card.querySelector('.night-val');
-  const totalValEl = card.querySelector('.total-val');
   const bookingBtn = card.querySelector('.btn-book');
 
   if (item.available === false) {
     card.classList.add('sold-out-card');
     if (priceWrapper) {
       priceWrapper.innerHTML = `
-        <div class="sold-out-badge" style="color: #ef4444; font-size: 1.8rem; font-weight: 800; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 8px; text-align: center; border: 1px solid rgba(239, 68, 68, 0.3);">
+        <div class="sold-out-badge" style="color: #ef4444; font-size: 1.5rem; font-weight: 800; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 8px; text-align: center; border: 1px solid rgba(239, 68, 68, 0.3);">
           🚫 Sold Out
         </div>
         <div class="price-unit" style="text-align: center; margin-top: 8px; color: #fca5a5;">No available rooms for these dates</div>
       `;
     }
-    if (nightPriceEl) nightPriceEl.textContent = 'N/A';
-    if (totalValEl) totalValEl.textContent = 'N/A (Sold Out)';
     if (bookingBtn) {
       bookingBtn.href = item.bookingUrl || '#';
-      bookingBtn.innerHTML = `<span>Check Dates on Booking.com</span> <span>↗</span>`;
+      bookingBtn.innerHTML = `<span>Check Dates on ChoiceHotels</span> <span>↗</span>`;
       bookingBtn.style.background = 'linear-gradient(135deg, #475569 0%, #334155 100%)';
     }
   } else {
@@ -105,7 +125,7 @@ function renderCard(cardId, item) {
       </div>
     `;
 
-    const existingBreakdowns = card.querySelectorAll('.price-breakdown');
+    const existingBreakdowns = card.querySelectorAll('.price-breakdown-wrapper');
     existingBreakdowns.forEach(el => el.remove());
 
     const breakdownWrapper = document.createElement('div');
@@ -115,16 +135,92 @@ function renderCard(cardId, item) {
     if (bookingBtn) {
       card.insertBefore(breakdownWrapper, bookingBtn);
       bookingBtn.href = item.bookingUrl;
-      bookingBtn.innerHTML = `<span>Book for $${item.totalPrice} CAD Grand Total</span> <span>↗</span>`;
+      bookingBtn.innerHTML = `<span>Book on Booking.com for $${item.totalPrice} CAD</span> <span>↗</span>`;
     }
   }
+}
+
+function highlightCheapest(bayviewRates, grandRates) {
+  // 2-Night Stay comparison
+  const b10 = bayviewRates.oct10ToOct12 ? bayviewRates.oct10ToOct12.totalPrice : null;
+  const g10 = grandRates.oct10ToOct12 ? grandRates.oct10ToOct12.totalPrice : null;
+  const best2NightEl = document.getElementById('best-2night');
+
+  if (b10 && g10) {
+    if (g10 < b10) {
+      tagCard('card-grandTappattoo-oct10-12', '🏆 Lowest 2-Night Rate');
+      if (best2NightEl) best2NightEl.querySelector('.highlight-value').innerHTML = `The Grand Tappattoo Resort ($${g10} CAD total) — Save $${b10 - g10} CAD!`;
+    } else if (b10 < g10) {
+      tagCard('card-bayview-oct10-12', '🏆 Lowest 2-Night Rate');
+      if (best2NightEl) best2NightEl.querySelector('.highlight-value').innerHTML = `Bayview Wildwood Resort ($${b10} CAD total) — Save $${g10 - b10} CAD!`;
+    } else {
+      if (best2NightEl) best2NightEl.querySelector('.highlight-value').textContent = `Both resorts equal at $${b10} CAD total`;
+    }
+  } else if (b10 || g10) {
+    const winner = b10 ? `Bayview Wildwood ($${b10} CAD)` : `Grand Tappattoo ($${g10} CAD)`;
+    if (best2NightEl) best2NightEl.querySelector('.highlight-value').textContent = winner;
+  }
+
+  // 3-Night Stay comparison
+  const b9 = bayviewRates.oct9ToOct12 ? bayviewRates.oct9ToOct12.totalPrice : null;
+  const g9 = grandRates.oct9ToOct12 ? grandRates.oct9ToOct12.totalPrice : null;
+  const best3NightEl = document.getElementById('best-3night');
+
+  if (b9 && g9) {
+    if (g9 < b9) {
+      tagCard('card-grandTappattoo-oct9-12', '🏆 Lowest 3-Night Rate');
+      if (best3NightEl) best3NightEl.querySelector('.highlight-value').innerHTML = `The Grand Tappattoo Resort ($${g9} CAD total) — Save $${b9 - g9} CAD!`;
+    } else if (b9 < g9) {
+      tagCard('card-bayview-oct9-12', '🏆 Lowest 3-Night Rate');
+      if (best3NightEl) best3NightEl.querySelector('.highlight-value').innerHTML = `Bayview Wildwood Resort ($${b9} CAD total) — Save $${g9 - b9} CAD!`;
+    } else {
+      if (best3NightEl) best3NightEl.querySelector('.highlight-value').textContent = `Both resorts equal at $${b9} CAD total`;
+    }
+  } else if (b9 || g9) {
+    const winner = b9 ? `Bayview Wildwood ($${b9} CAD)` : `Grand Tappattoo ($${g9} CAD)`;
+    if (best3NightEl) best3NightEl.querySelector('.highlight-value').textContent = winner;
+  }
+}
+
+function tagCard(cardId, label) {
+  const card = document.getElementById(cardId);
+  if (!card) return;
+  card.classList.add('best-deal');
+  const tag = document.createElement('div');
+  tag.className = 'best-deal-tag';
+  tag.textContent = label;
+  card.appendChild(tag);
+}
+
+function setupFilters() {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.getAttribute('data-resort-filter');
+      const bayviewSec = document.getElementById('resort-bayview');
+      const grandSec = document.getElementById('resort-grandTappattoo');
+
+      if (filter === 'all') {
+        if (bayviewSec) bayviewSec.classList.remove('hidden');
+        if (grandSec) grandSec.classList.remove('hidden');
+      } else if (filter === 'bayview') {
+        if (bayviewSec) bayviewSec.classList.remove('hidden');
+        if (grandSec) grandSec.classList.add('hidden');
+      } else if (filter === 'grandTappattoo') {
+        if (bayviewSec) bayviewSec.classList.add('hidden');
+        if (grandSec) grandSec.classList.remove('hidden');
+      }
+    });
+  });
 }
 
 function renderChart(history) {
   const ctx = document.getElementById('priceHistoryChart');
   if (!ctx) return;
 
-  // Deduplicate entries by dateLabel to ensure each date is shown ONLY ONCE on the X-axis
   const uniqueMap = new Map();
   history.forEach(entry => {
     const label = entry.dateLabel || new Date(entry.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -134,8 +230,26 @@ function renderChart(history) {
   const uniqueHistory = Array.from(uniqueMap.values());
   const labels = Array.from(uniqueMap.keys());
 
-  const datasetOct10 = uniqueHistory.map(h => h.oct10ToOct12 ? (h.oct10ToOct12.totalPrice || h.oct10ToOct12.pricePerNight) : null);
-  const datasetOct9 = uniqueHistory.map(h => h.oct9ToOct12 ? (h.oct9ToOct12.totalPrice || h.oct9ToOct12.pricePerNight) : null);
+  // Extract datasets for both resorts
+  const b10Data = uniqueHistory.map(h => {
+    const r = (h.bayview && h.bayview.oct10ToOct12) || h.oct10ToOct12;
+    return r ? (r.totalPrice || r.pricePerNight) : null;
+  });
+
+  const b9Data = uniqueHistory.map(h => {
+    const r = (h.bayview && h.bayview.oct9ToOct12) || h.oct9ToOct12;
+    return r ? (r.totalPrice || r.pricePerNight) : null;
+  });
+
+  const g10Data = uniqueHistory.map(h => {
+    const r = h.grandTappattoo ? h.grandTappattoo.oct10ToOct12 : null;
+    return r ? (r.totalPrice || r.pricePerNight) : null;
+  });
+
+  const g9Data = uniqueHistory.map(h => {
+    const r = h.grandTappattoo ? h.grandTappattoo.oct9ToOct12 : null;
+    return r ? (r.totalPrice || r.pricePerNight) : null;
+  });
 
   new Chart(ctx, {
     type: 'line',
@@ -143,26 +257,40 @@ function renderChart(history) {
       labels: labels,
       datasets: [
         {
-          label: 'Oct 10 – Oct 12 Grand Total (2 Nights)',
-          data: datasetOct10,
+          label: 'Bayview Wildwood (Oct 10–12, 2N)',
+          data: b10Data,
           borderColor: '#38bdf8',
-          backgroundColor: 'rgba(56, 189, 248, 0.15)',
+          backgroundColor: 'rgba(56, 189, 248, 0.1)',
           borderWidth: 3,
-          fill: true,
           tension: 0.3,
-          pointRadius: 5,
-          pointHoverRadius: 7
+          pointRadius: 5
         },
         {
-          label: 'Oct 9 – Oct 12 Grand Total (3 Nights)',
-          data: datasetOct9,
-          borderColor: '#fbbf24',
-          backgroundColor: 'rgba(251, 191, 36, 0.15)',
+          label: 'Bayview Wildwood (Oct 9–12, 3N)',
+          data: b9Data,
+          borderColor: '#0284c7',
+          backgroundColor: 'rgba(2, 132, 199, 0.1)',
           borderWidth: 3,
-          fill: true,
           tension: 0.3,
-          pointRadius: 5,
-          pointHoverRadius: 7
+          pointRadius: 5
+        },
+        {
+          label: 'Grand Tappattoo (Oct 10–12, 2N)',
+          data: g10Data,
+          borderColor: '#fbbf24',
+          backgroundColor: 'rgba(251, 191, 36, 0.1)',
+          borderWidth: 3,
+          tension: 0.3,
+          pointRadius: 5
+        },
+        {
+          label: 'Grand Tappattoo (Oct 9–12, 3N)',
+          data: g9Data,
+          borderColor: '#a855f7',
+          backgroundColor: 'rgba(168, 85, 247, 0.1)',
+          borderWidth: 3,
+          tension: 0.3,
+          pointRadius: 5
         }
       ]
     },
@@ -173,7 +301,7 @@ function renderChart(history) {
         legend: {
           labels: {
             color: '#f8fafc',
-            font: { family: 'Outfit', size: 13 }
+            font: { family: 'Outfit', size: 12 }
           }
         },
         tooltip: {
@@ -181,7 +309,7 @@ function renderChart(history) {
           intersect: false,
           callbacks: {
             label: function(context) {
-              return context.raw ? `${context.dataset.label}: $${context.raw} CAD Grand Total` : `${context.dataset.label}: Sold Out`;
+              return context.raw ? `${context.dataset.label}: $${context.raw} CAD Total` : `${context.dataset.label}: N/A`;
             }
           }
         }
@@ -205,9 +333,9 @@ function renderChart(history) {
 }
 
 function showErrorState(msg) {
-  const container = document.querySelector('.pricing-grid');
+  const container = document.querySelector('main');
   if (container) {
-    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #f87171; padding: 40px; background: rgba(239, 68, 68, 0.1); border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.2);">
+    container.innerHTML = `<div style="text-align: center; color: #f87171; padding: 40px; background: rgba(239, 68, 68, 0.1); border-radius: 12px; border: 1px solid rgba(239, 68, 68, 0.2);">
       <h3>Unable to load current prices</h3>
       <p style="margin-top: 8px;">${msg}</p>
     </div>`;

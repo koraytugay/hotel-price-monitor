@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bayview Wildwood Resort Price Monitor | Automated Daily Tracker</title>
-  <meta name="description" content="Daily automated room rate tracker for Bayview Wildwood Resort (Ascend Collection). Tracks cheapest room rates for 2 Adults and 2 Children for October 9-12 and October 10-12.">
+  <title>Ascend Collection Resorts Price Monitor | Daily Automated Tracker</title>
+  <meta name="description" content="Daily automated room rate tracker for Bayview Wildwood Resort and The Grand Tappattoo Resort (Ascend Hotel Collection). Compares room rates for 2 Adults and 2 Children for Oct 9-12 and Oct 10-12.">
   
   <!-- Google Fonts & Chart.js -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,10 +23,10 @@
     <header class="header-hero">
       <div class="badge-tag">
         <span class="dot"></span>
-        <span>Daily Automated Tracker</span>
+        <span>Daily Automated Tracker • 2 Resorts Monitored</span>
       </div>
-      <h1>Bayview Wildwood Resort</h1>
-      <p class="subtitle">Cheapest room price monitor for Ascend Hotel Collection, Severn Bridge ON</p>
+      <h1>Ascend Collection Resorts</h1>
+      <p class="subtitle">Cheapest price monitor for <strong>Bayview Wildwood Resort</strong> & <strong>The Grand Tappattoo Resort</strong></p>
       
       <div class="meta-info-strip">
         <div class="meta-item" id="occupancy-badge">
@@ -39,84 +39,122 @@
         </div>
         <div class="meta-item">
           <span>📍</span>
-          <span>Severn Bridge, ON</span>
+          <span>Severn Bridge & Seguin, ON</span>
         </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="filter-bar">
+        <button class="filter-btn active" data-resort-filter="all">✨ All Resorts</button>
+        <button class="filter-btn" data-resort-filter="bayview">🌲 Bayview Wildwood</button>
+        <button class="filter-btn" data-resort-filter="grandTappattoo">🌊 The Grand Tappattoo</button>
       </div>
     </header>
 
-    <!-- Main Pricing Grid -->
+    <!-- Lowest Rate Comparison Highlight Banner -->
+    <section class="highlight-banner" id="highlight-banner">
+      <div class="highlight-title">💡 Lowest Rate Highlights</div>
+      <div class="highlight-grid">
+        <div class="highlight-card" id="best-2night">
+          <div class="highlight-label">Cheapest 2-Night Stay (Oct 10–12)</div>
+          <div class="highlight-value">Loading...</div>
+        </div>
+        <div class="highlight-card" id="best-3night">
+          <div class="highlight-label">Cheapest 3-Night Stay (Oct 9–12)</div>
+          <div class="highlight-value">Loading...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Pricing Section -->
     <main>
-      <div class="pricing-section-title">
-        <span>🏷️</span> Current Price Comparisons
-      </div>
-
-      <div class="pricing-grid">
-        
-        <!-- Card 1: Oct 10 - Oct 12 (2 Nights) -->
-        <article class="price-card featured" id="card-oct10-12">
-          <div class="card-header">
-            <span class="date-range-badge">2-Night Weekend Stay</span>
-            <h3>Oct 10 – Oct 12</h3>
-            <span class="nights-label">Saturday to Monday (2 Nights)</span>
+      
+      <!-- Section 1: Bayview Wildwood Resort -->
+      <section class="resort-section" id="resort-bayview" data-resort-id="bayview">
+        <div class="resort-header">
+          <div class="resort-title-wrap">
+            <h2>Bayview Wildwood Resort</h2>
+            <span class="resort-location">📍 Severn Bridge, Ontario</span>
           </div>
+          <a href="https://www.booking.com/searchresults.html?ss=Bayview+Wildwood+Resort" target="_blank" rel="noopener" class="resort-direct-link">Booking.com ↗</a>
+        </div>
 
-          <div class="price-display-wrapper">
-            <div class="price-amount">
-              <span class="currency">$</span><span class="price-val">---</span>
+        <div class="pricing-grid">
+          <!-- Card: Oct 10 - Oct 12 -->
+          <article class="price-card featured" id="card-bayview-oct10-12">
+            <div class="card-header">
+              <span class="date-range-badge">2-Night Weekend Stay</span>
+              <h3>Oct 10 – Oct 12</h3>
+              <span class="nights-label">Saturday to Monday (2 Nights)</span>
             </div>
-            <div class="price-unit">per night (CAD)</div>
-          </div>
-
-          <div class="price-breakdown">
-            <span class="label">Nightly Rate:</span>
-            <span class="value night-val">---</span>
-          </div>
-          <div class="price-breakdown">
-            <span class="label">Total Stay Estimate:</span>
-            <span class="value total-val">---</span>
-          </div>
-
-          <a href="https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64" target="_blank" rel="noopener" class="btn-book">
-            <span>Check Availability & Book</span>
-            <span>↗</span>
-          </a>
-        </article>
-
-        <!-- Card 2: Oct 9 - Oct 12 (3 Nights) -->
-        <article class="price-card" id="card-oct9-12">
-          <div class="card-header">
-            <span class="date-range-badge" style="color: var(--accent-blue); background: rgba(56, 189, 248, 0.1);">3-Night Extended Stay</span>
-            <h3>Oct 9 – Oct 12</h3>
-            <span class="nights-label">Friday to Monday (3 Nights)</span>
-          </div>
-
-          <div class="price-display-wrapper">
-            <div class="price-amount" style="color: var(--accent-blue);">
-              <span class="currency">$</span><span class="price-val">---</span>
+            <div class="price-display-wrapper">
+              <div class="price-amount"><span class="currency">$</span><span class="price-val">---</span></div>
+              <div class="price-unit">per night (CAD)</div>
             </div>
-            <div class="price-unit">per night (CAD)</div>
-          </div>
+            <a href="#" target="_blank" rel="noopener" class="btn-book"><span>Check Rates & Book</span> <span>↗</span></a>
+          </article>
 
-          <div class="price-breakdown">
-            <span class="label">Nightly Rate:</span>
-            <span class="value night-val">---</span>
-          </div>
-          <div class="price-breakdown">
-            <span class="label">Total Stay Estimate:</span>
-            <span class="value total-val">---</span>
-          </div>
+          <!-- Card: Oct 9 - Oct 12 -->
+          <article class="price-card" id="card-bayview-oct9-12">
+            <div class="card-header">
+              <span class="date-range-badge" style="color: var(--accent-blue); background: rgba(56, 189, 248, 0.1);">3-Night Extended Stay</span>
+              <h3>Oct 9 – Oct 12</h3>
+              <span class="nights-label">Friday to Monday (3 Nights)</span>
+            </div>
+            <div class="price-display-wrapper">
+              <div class="price-amount" style="color: var(--accent-blue);"><span class="currency">$</span><span class="price-val">---</span></div>
+              <div class="price-unit">per night (CAD)</div>
+            </div>
+            <a href="#" target="_blank" rel="noopener" class="btn-book"><span>Check Rates & Book</span> <span>↗</span></a>
+          </article>
+        </div>
+      </section>
 
-          <a href="https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64" target="_blank" rel="noopener" class="btn-book">
-            <span>Check Availability & Book</span>
-            <span>↗</span>
-          </a>
-        </article>
+      <!-- Section 2: The Grand Tappattoo Resort -->
+      <section class="resort-section" id="resort-grandTappattoo" data-resort-id="grandTappattoo">
+        <div class="resort-header">
+          <div class="resort-title-wrap">
+            <h2>The Grand Tappattoo Resort</h2>
+            <span class="resort-location">📍 Seguin / Parry Sound, Ontario</span>
+          </div>
+          <a href="https://www.booking.com/searchresults.html?ss=The+Grand+Tappattoo+Resort" target="_blank" rel="noopener" class="resort-direct-link">Booking.com ↗</a>
+        </div>
 
-      </div>
+        <div class="pricing-grid">
+          <!-- Card: Oct 10 - Oct 12 -->
+          <article class="price-card featured" id="card-grandTappattoo-oct10-12">
+            <div class="card-header">
+              <span class="date-range-badge">2-Night Weekend Stay</span>
+              <h3>Oct 10 – Oct 12</h3>
+              <span class="nights-label">Saturday to Monday (2 Nights)</span>
+            </div>
+            <div class="price-display-wrapper">
+              <div class="price-amount"><span class="currency">$</span><span class="price-val">---</span></div>
+              <div class="price-unit">per night (CAD)</div>
+            </div>
+            <a href="#" target="_blank" rel="noopener" class="btn-book"><span>Check Rates & Book</span> <span>↗</span></a>
+          </article>
+
+          <!-- Card: Oct 9 - Oct 12 -->
+          <article class="price-card" id="card-grandTappattoo-oct9-12">
+            <div class="card-header">
+              <span class="date-range-badge" style="color: var(--accent-blue); background: rgba(56, 189, 248, 0.1);">3-Night Extended Stay</span>
+              <h3>Oct 9 – Oct 12</h3>
+              <span class="nights-label">Friday to Monday (3 Nights)</span>
+            </div>
+            <div class="price-display-wrapper">
+              <div class="price-amount" style="color: var(--accent-blue);"><span class="currency">$</span><span class="price-val">---</span></div>
+              <div class="price-unit">per night (CAD)</div>
+            </div>
+            <a href="#" target="_blank" rel="noopener" class="btn-book"><span>Check Rates & Book</span> <span>↗</span></a>
+          </article>
+        </div>
+      </section>
 
       <!-- Price History Trend Section -->
       <section class="history-section">
-        <h2>📈 Daily Price History & Trends</h2>
+        <h2>📈 Multi-Resort Price History & Trends</h2>
+        <p class="history-subtitle">Track historical rate fluctuations for both resorts side-by-side</p>
         <div class="chart-wrapper">
           <canvas id="priceHistoryChart"></canvas>
         </div>
@@ -126,7 +164,7 @@
 
     <!-- Footer -->
     <footer>
-      <p>Data automatically updated daily via <a href="https://github.com" target="_blank" rel="noopener">GitHub Actions</a>. Room rates subject to change by Choice Hotels International.</p>
+      <p>Data automatically updated every 6 hours via <a href="https://github.com" target="_blank" rel="noopener">GitHub Actions</a>. Room rates subject to change by Choice Hotels International & Booking.com.</p>
     </footer>
 
   </div>

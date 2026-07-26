@@ -38,16 +38,16 @@ body {
 
 .app-container {
   max-width: 1200px;
-  width: 90%;
+  width: 92%;
   margin: 0 auto;
   padding: 40px 0;
   flex: 1;
 }
 
-/* Header Header Section */
+/* Header Hero Section */
 .header-hero {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 35px;
 }
 
 .badge-tag {
@@ -86,7 +86,7 @@ body {
 .header-hero p.subtitle {
   color: var(--text-muted);
   font-size: 1.125rem;
-  max-width: 650px;
+  max-width: 700px;
   margin: 0 auto 24px;
 }
 
@@ -94,9 +94,10 @@ body {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 16px;
   font-size: 0.95rem;
   color: var(--text-muted);
+  margin-bottom: 24px;
 }
 
 .meta-item {
@@ -109,21 +110,137 @@ body {
   border: 1px solid var(--border-color);
 }
 
-/* Pricing Grid Cards */
-.pricing-section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 24px;
+/* Filter Controls */
+.filter-bar {
   display: flex;
-  align-items: center;
+  justify-content: center;
   gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
 }
 
+.filter-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filter-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: var(--shadow-glow);
+}
+
+/* Highlight Banner */
+.highlight-banner {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 40px;
+}
+
+.highlight-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-blue);
+  margin-bottom: 14px;
+}
+
+.highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.highlight-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.highlight-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.highlight-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent-emerald);
+}
+
+/* Resort Sections */
+.resort-section {
+  margin-bottom: 45px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.resort-section.hidden {
+  display: none;
+}
+
+.resort-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.resort-title-wrap h2 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.resort-location {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.resort-direct-link {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+  text-decoration: none;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: all var(--transition-fast);
+}
+
+.resort-direct-link:hover {
+  background: rgba(56, 189, 248, 0.2);
+  color: #fff;
+}
+
+/* Pricing Grid Cards */
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 24px;
-  margin-bottom: 50px;
 }
 
 .price-card {
@@ -132,7 +249,7 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 30px;
+  padding: 26px;
   position: relative;
   overflow: hidden;
   transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
@@ -142,7 +259,7 @@ body {
 }
 
 .price-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
   border-color: rgba(56, 189, 248, 0.4);
   box-shadow: var(--shadow-glow);
 }
@@ -151,8 +268,27 @@ body {
   border-color: rgba(251, 191, 36, 0.5);
 }
 
+.price-card.best-deal {
+  border-color: var(--accent-emerald);
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.2);
+}
+
+.best-deal-tag {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(52, 211, 153, 0.15);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: var(--accent-emerald);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
 .card-header {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .card-header .date-range-badge {
@@ -164,51 +300,55 @@ body {
   background: rgba(251, 191, 36, 0.1);
   padding: 4px 10px;
   border-radius: 6px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .card-header h3 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
   color: var(--text-main);
 }
 
 .card-header .nights-label {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .price-display-wrapper {
-  margin: 20px 0;
+  margin: 16px 0;
 }
 
 .price-amount {
-  font-size: 3rem;
+  font-size: 2.75rem;
   font-weight: 800;
   line-height: 1;
   color: var(--accent-emerald);
 }
 
 .price-amount .currency {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 600;
   vertical-align: top;
   margin-right: 4px;
 }
 
 .price-unit {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
   margin-top: 6px;
 }
 
+.price-breakdown-wrapper {
+  margin-top: 14px;
+}
+
 .price-breakdown {
   border-top: 1px dashed var(--border-color);
-  padding-top: 16px;
-  margin-top: 16px;
+  padding-top: 12px;
+  margin-top: 12px;
   display: flex;
   justify-content: space-between;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
 }
 
 .price-breakdown span.label {
@@ -226,8 +366,8 @@ body {
   justify-content: center;
   gap: 8px;
   width: 100%;
-  margin-top: 24px;
-  padding: 14px 20px;
+  margin-top: 20px;
+  padding: 12px 18px;
   background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
   color: #fff;
   text-decoration: none;
@@ -238,7 +378,7 @@ body {
 
 .btn-book:hover {
   filter: brightness(1.15);
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 /* History Chart Section */
@@ -247,19 +387,26 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 30px;
+  margin-top: 20px;
   margin-bottom: 40px;
 }
 
 .history-section h2 {
   font-size: 1.4rem;
-  margin-bottom: 20px;
+  margin-bottom: 4px;
   color: var(--text-main);
+}
+
+.history-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
 }
 
 .chart-wrapper {
   position: relative;
   width: 100%;
-  height: 320px;
+  height: 350px;
 }
 
 /* Footer */

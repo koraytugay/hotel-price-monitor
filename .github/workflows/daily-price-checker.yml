@@ -76,7 +76,7 @@ jobs:
           server_port: 587
           username: ${{ secrets.ICLOUD_EMAIL }}
           password: ${{ secrets.ICLOUD_APP_PASSWORD }}
-          subject: "🔔 Hotel Price Alert: Bayview Wildwood Resort Rate Changed!"
+          subject: "🔔 Hotel Price Alert: Ascend Collection Resort Rate Changed!"
           to: ${{ secrets.NOTIFICATION_EMAILS || secrets.ICLOUD_EMAIL }}
           from: ${{ secrets.ICLOUD_EMAIL }}
           html_body_file: data/email_body.html
