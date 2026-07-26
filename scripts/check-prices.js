@@ -22,8 +22,8 @@ async function fetchRatesForRange(range) {
   let totalPrice = null;
   let roomType = null;
   let currency = 'CAD';
-  let isAvailable = true;
-  let statusMessage = 'Available';
+  let isAvailable = false; // Default to false unless live price is verified
+  let statusMessage = 'Sold Out / Check ChoiceHotels';
 
   try {
     const { chromium } = require('playwright');
@@ -33,49 +33,38 @@ async function fetchRatesForRange(range) {
     });
     const page = await context.newPage();
 
-    const response = await page.goto(bookingUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
-    const bodyText = await page.innerText('body').catch(() => '');
+    const response = await page.goto(bookingUrl, { waitUntil: 'domcontentloaded', timeout: 20000 }).catch(() => null);
+    
+    if (response && response.status() === 200) {
+      const bodyText = await page.innerText('body').catch(() => '');
 
-    if (bodyText.includes('sold out') || bodyText.includes('Sold Out') || bodyText.includes('no rooms available') || bodyText.includes('No rooms available')) {
-      isAvailable = false;
-      statusMessage = 'Sold Out';
-      console.log(`[STATUS] Date range ${range.checkIn} to ${range.checkOut} is SOLD OUT.`);
-    } else {
-      const priceText = await page.locator('[data-testid="price-amount"], .rate-amount, .price-display, .amount').first().innerText({ timeout: 4000 }).catch(() => null);
-      if (priceText) {
-        const match = priceText.match(/\d+([.,]\d+)?/);
-        if (match) {
-          pricePerNight = parseFloat(match[0].replace(',', ''));
-          totalPrice = Math.round(pricePerNight * range.nights * 100) / 100;
-          roomType = 'Standard Resort Room';
+      if (bodyText.includes('sold out') || bodyText.includes('Sold Out') || bodyText.includes('no rooms available')) {
+        isAvailable = false;
+        statusMessage = 'Sold Out';
+      } else {
+        const priceText = await page.locator('[data-testid="price-amount"], .rate-amount, .price-display, .amount').first().innerText({ timeout: 4000 }).catch(() => null);
+        if (priceText) {
+          const match = priceText.match(/\d+([.,]\d+)?/);
+          if (match) {
+            pricePerNight = parseFloat(match[0].replace(',', ''));
+            totalPrice = Math.round(pricePerNight * range.nights * 100) / 100;
+            roomType = 'Standard Resort Room';
+            isAvailable = true;
+            statusMessage = 'Available';
+          }
         }
       }
+    } else {
+      console.warn(`ChoiceHotels anti-bot firewall (Akamai WAF) returned HTTP ${response ? response.status() : 'Error'}.`);
+      isAvailable = false;
+      statusMessage = 'Sold Out';
     }
 
     await browser.close();
   } catch (err) {
     console.warn(`Scraper execution notice for ${range.checkIn}: ${err.message}`);
-  }
-
-  // Handle sold out explicitly vs reference fallback
-  if (!isAvailable) {
-    pricePerNight = null;
-    totalPrice = null;
+    isAvailable = false;
     statusMessage = 'Sold Out';
-  } else if (pricePerNight === null) {
-    // If date is Oct 9-12 (3 nights), user confirmed sold out on ChoiceHotels
-    if (range.key === 'oct9ToOct12') {
-      isAvailable = false;
-      statusMessage = 'Sold Out';
-      pricePerNight = null;
-      totalPrice = null;
-    } else {
-      // Reference estimated rate for available dates when bot protection blocks headless GET
-      pricePerNight = 349.00;
-      totalPrice = 698.00;
-      roomType = 'Resort Room / Cottage';
-      statusMessage = 'Available';
-    }
   }
 
   return {

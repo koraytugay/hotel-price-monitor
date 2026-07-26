@@ -10,18 +10,18 @@
       9
     ]
   },
-  "lastUpdated": "2026-07-26T01:47:08.506Z",
+  "lastUpdated": "2026-07-26T01:47:47.267Z",
   "current": {
     "oct10ToOct12": {
       "checkIn": "2026-10-10",
       "checkOut": "2026-10-12",
       "nights": 2,
-      "pricePerNight": 349,
-      "totalPrice": 698,
+      "pricePerNight": null,
+      "totalPrice": null,
       "currency": "CAD",
-      "roomType": "Resort Room / Cottage",
-      "available": true,
-      "statusMessage": "Available",
+      "roomType": null,
+      "available": false,
+      "statusMessage": "Sold Out",
       "bookingUrl": "https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64/rates?checkInDate=2026-10-10&checkOutDate=2026-10-12&adults=2&children=2&ages=9,9"
     },
     "oct9ToOct12": {
@@ -81,6 +81,20 @@
         "pricePerNight": 349,
         "totalPrice": 698,
         "available": true
+      },
+      "oct9ToOct12": {
+        "pricePerNight": null,
+        "totalPrice": null,
+        "available": false
+      }
+    },
+    {
+      "timestamp": "2026-07-26T01:47:47.267Z",
+      "dateLabel": "Jul 25",
+      "oct10ToOct12": {
+        "pricePerNight": null,
+        "totalPrice": null,
+        "available": false
       },
       "oct9ToOct12": {
         "pricePerNight": null,
