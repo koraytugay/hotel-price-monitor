@@ -8,7 +8,7 @@ const HOTEL_NAME = 'Bayview Wildwood Resort, an Ascend Collection Resort';
 // Target Date Ranges for 2 Adults + 2 Kids (aged 9, 9)
 const TARGET_RANGES = [
   { key: 'oct10ToOct12', checkIn: '2026-10-10', checkOut: '2026-10-12', nights: 2, defaultBase: 758, defaultTax: 189 },
-  { key: 'oct9ToOct12', checkIn: '2026-10-09', checkOut: '2026-10-12', nights: 3, defaultBase: 1137, defaultTax: 284 }
+  { key: 'oct9ToOct12', checkIn: '2026-10-09', checkOut: '2026-10-12', nights: 3, defaultBase: 823, defaultTax: 206 }
 ];
 
 async function fetchRatesFromBookingDotCom(range) {
@@ -48,7 +48,7 @@ async function fetchRatesFromBookingDotCom(range) {
           const cleanPrice = rawPrice.replace(/[^\d]/g, '');
           if (cleanPrice) {
             const parsedBase = parseFloat(cleanPrice);
-            if (parsedBase >= 500) {
+            if (parsedBase >= 400) {
               basePrice = parsedBase;
               taxesAndFees = Math.round(basePrice * 0.25);
               totalPrice = basePrice + taxesAndFees;
@@ -138,7 +138,6 @@ async function main() {
     }
   };
 
-  // Upsert history by dateLabel to ensure each date is listed ONLY ONCE
   const existingIndex = existingData.history.findIndex(h => h.dateLabel === dateLabel);
   if (existingIndex >= 0) {
     existingData.history[existingIndex] = newHistoryRecord;
@@ -157,7 +156,7 @@ async function main() {
   const jsContent = `window.PRICES_DATA = ${JSON.stringify(existingData, null, 2)};`;
   fs.writeFileSync(DATA_JS_FILE, jsContent, 'utf8');
 
-  console.log('✅ Updated data/prices.json and data/prices.js with deduplicated history!');
+  console.log('✅ Updated data/prices.json and data/prices.js with accurate 3-night rates!');
 }
 
 main().catch(err => {

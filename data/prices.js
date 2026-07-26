@@ -9,16 +9,16 @@ window.PRICES_DATA = {
       9
     ]
   },
-  "lastUpdated": "2026-07-26T01:56:59.601Z",
+  "lastUpdated": "2026-07-26T01:59:30.547Z",
   "current": {
     "oct10ToOct12": {
       "checkIn": "2026-10-10",
       "checkOut": "2026-10-12",
       "nights": 2,
-      "basePrice": 758,
-      "taxesAndFees": 189,
-      "totalPrice": 947,
-      "pricePerNight": 473.5,
+      "basePrice": 494,
+      "taxesAndFees": 124,
+      "totalPrice": 618,
+      "pricePerNight": 309,
       "currency": "CAD",
       "provider": "Booking.com / Hotel Direct",
       "roomType": "Family Room / Resort Suite (2 Adults, 2 Children)",
@@ -44,13 +44,13 @@ window.PRICES_DATA = {
   },
   "history": [
     {
-      "timestamp": "2026-07-26T01:56:59.601Z",
+      "timestamp": "2026-07-26T01:59:30.547Z",
       "dateLabel": "Jul 25",
       "oct10ToOct12": {
-        "pricePerNight": 473.5,
-        "totalPrice": 947,
-        "basePrice": 758,
-        "taxesAndFees": 189,
+        "pricePerNight": 309,
+        "totalPrice": 618,
+        "basePrice": 494,
+        "taxesAndFees": 124,
         "available": true
       },
       "oct9ToOct12": {
