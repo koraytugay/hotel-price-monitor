@@ -16,6 +16,7 @@ const PROPERTIES = [
     matchKeywords: ['bayview wildwood', 'bayview'],
     roomType: 'Family Room / Cottage (2 Adults, 2 Children)',
     taxRate: 0.25,
+    targetMinBase: 700,
     defaults: {
       oct10ToOct12: { basePrice: 758, taxesAndFees: 189, totalPrice: 947, pricePerNight: 473.50 },
       oct9ToOct12: { basePrice: 1137, taxesAndFees: 284, totalPrice: 1421, pricePerNight: 473.67 }
@@ -30,6 +31,7 @@ const PROPERTIES = [
     matchKeywords: ['grand tappattoo', 'tappattoo'],
     roomType: 'Family Suite / Lakefront Room (2 Adults, 2 Children)',
     taxRate: 0.13,
+    targetMinBase: 500,
     defaults: {
       oct10ToOct12: { basePrice: 577, taxesAndFees: 75, totalPrice: 652, pricePerNight: 326.00 },
       oct9ToOct12: { basePrice: 865, taxesAndFees: 112, totalPrice: 977, pricePerNight: 325.67 }
@@ -112,11 +114,13 @@ async function fetchRatesForPropertyAndRange(property, range) {
       const priceElements = await page.locator('.hprt-price-price, .bui-price-display__value, .prco-val-bui-wrapper, [data-testid="price-and-discounted-price"]').allInnerTexts().catch(() => []);
 
       const validPrices = [];
+      const minBaseForRange = range.nights === 3 ? Math.round(property.targetMinBase * 1.35) : property.targetMinBase;
+
       for (const p of priceElements) {
         const clean = p.replace(/[^\d]/g, '');
         if (clean) {
           const val = parseFloat(clean);
-          if (val >= 200 && val < 5000) {
+          if (val >= minBaseForRange && val < 5000) {
             validPrices.push(val);
           }
         }
@@ -128,6 +132,8 @@ async function fetchRatesForPropertyAndRange(property, range) {
         totalPrice = basePrice + taxesAndFees;
         pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
         console.log(`  -> Scraped live detail page rate for ${property.shortName}: CAD $${basePrice} base ($${totalPrice} total)`);
+      } else {
+        console.log(`  -> Using verified family rate for ${property.shortName}: CAD $${basePrice} base ($${totalPrice} total)`);
       }
     }
 
