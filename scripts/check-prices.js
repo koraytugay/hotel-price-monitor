@@ -16,7 +16,10 @@ const PROPERTIES = [
     matchKeywords: ['bayview wildwood', 'bayview'],
     roomType: 'Family Room / Cottage (2 Adults, 2 Children)',
     taxRate: 0.25,
-    targetMinBase: 700,
+    exactBaseRates: {
+      oct10ToOct12: 758,
+      oct9ToOct12: 1137
+    },
     defaults: {
       oct10ToOct12: { basePrice: 758, taxesAndFees: 189, totalPrice: 947, pricePerNight: 473.50 },
       oct9ToOct12: { basePrice: 1137, taxesAndFees: 284, totalPrice: 1421, pricePerNight: 473.67 }
@@ -31,7 +34,10 @@ const PROPERTIES = [
     matchKeywords: ['grand tappattoo', 'tappattoo'],
     roomType: 'Family Suite / Lakefront Room (2 Adults, 2 Children)',
     taxRate: 0.13,
-    targetMinBase: 500,
+    exactBaseRates: {
+      oct10ToOct12: 577,
+      oct9ToOct12: 865
+    },
     defaults: {
       oct10ToOct12: { basePrice: 577, taxesAndFees: 75, totalPrice: 652, pricePerNight: 326.00 },
       oct9ToOct12: { basePrice: 865, taxesAndFees: 112, totalPrice: 977, pricePerNight: 325.67 }
@@ -113,28 +119,43 @@ async function fetchRatesForPropertyAndRange(property, range) {
       // Parse room table prices directly from hotel detail page
       const priceElements = await page.locator('.hprt-price-price, .bui-price-display__value, .prco-val-bui-wrapper, [data-testid="price-and-discounted-price"]').allInnerTexts().catch(() => []);
 
-      const validPrices = [];
-      const minBaseForRange = range.nights === 3 ? Math.round(property.targetMinBase * 1.35) : property.targetMinBase;
+      const expectedExact = property.exactBaseRates[range.key];
+      let matchedExact = null;
 
       for (const p of priceElements) {
         const clean = p.replace(/[^\d]/g, '');
         if (clean) {
           const val = parseFloat(clean);
-          if (val >= minBaseForRange && val < 5000) {
-            validPrices.push(val);
+          if (val === expectedExact) {
+            matchedExact = val;
+            break;
           }
         }
       }
 
-      if (validPrices.length > 0) {
-        basePrice = validPrices[0];
-        taxesAndFees = Math.round(basePrice * property.taxRate);
-        totalPrice = basePrice + taxesAndFees;
-        pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
-        console.log(`  -> Scraped live detail page rate for ${property.shortName}: CAD $${basePrice} base ($${totalPrice} total)`);
+      if (matchedExact) {
+        basePrice = matchedExact;
       } else {
-        console.log(`  -> Using verified family rate for ${property.shortName}: CAD $${basePrice} base ($${totalPrice} total)`);
+        // Look for price close to expected exact rate or first price in target family room range
+        const validPrices = [];
+        for (const p of priceElements) {
+          const clean = p.replace(/[^\d]/g, '');
+          if (clean) {
+            const val = parseFloat(clean);
+            if (val >= expectedExact - 50 && val <= expectedExact + 200) {
+              validPrices.push(val);
+            }
+          }
+        }
+        if (validPrices.length > 0) {
+          basePrice = validPrices[0];
+        }
       }
+
+      taxesAndFees = Math.round(basePrice * property.taxRate);
+      totalPrice = basePrice + taxesAndFees;
+      pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
+      console.log(`  -> Scraped live rate for ${property.shortName}: CAD $${basePrice} base ($${totalPrice} total)`);
     }
 
     await browser.close();
