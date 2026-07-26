@@ -86,14 +86,38 @@ function renderCard(cardId, item) {
         <div class="price-amount">
           <span class="currency">$</span><span class="price-val">${item.pricePerNight}</span>
         </div>
-        <div class="price-unit">per night (CAD) • <strong style="color: #38bdf8;">via ${item.provider || 'Booking.com'}</strong></div>
+        <div class="price-unit">all-inclusive / night (${item.currency}) • <strong style="color: #38bdf8;">${item.roomType || 'Family Room'}</strong></div>
       `;
     }
-    if (nightPriceEl) nightPriceEl.textContent = `$${item.pricePerNight} CAD`;
-    if (totalValEl) totalValEl.textContent = `$${item.totalPrice} ${item.currency}`;
-    if (bookingBtn && item.bookingUrl) {
+    
+    // Detailed Breakdown HTML
+    const breakdownContainer = card.querySelector('.price-breakdown-container') || card;
+    let detailsHtml = `
+      <div class="price-breakdown">
+        <span class="label">Base Room Rate (${item.nights} Nights):</span>
+        <span class="value">$${item.basePrice} ${item.currency}</span>
+      </div>
+      <div class="price-breakdown">
+        <span class="label">Taxes & Fees (HST + Resort Fee):</span>
+        <span class="value" style="color: #fbbf24;">+$${item.taxesAndFees} ${item.currency}</span>
+      </div>
+      <div class="price-breakdown" style="border-top: 1px solid rgba(255,255,255,0.15); padding-top: 10px; margin-top: 10px;">
+        <span class="label" style="font-weight: 700; color: #fff;">Total Stay Estimate:</span>
+        <span class="value" style="font-weight: 800; font-size: 1.15rem; color: #34d399;">$${item.totalPrice} ${item.currency}</span>
+      </div>
+    `;
+
+    const existingBreakdowns = card.querySelectorAll('.price-breakdown');
+    existingBreakdowns.forEach(el => el.remove());
+
+    const breakdownWrapper = document.createElement('div');
+    breakdownWrapper.className = 'price-breakdown-wrapper';
+    breakdownWrapper.innerHTML = detailsHtml;
+
+    if (bookingBtn) {
+      card.insertBefore(breakdownWrapper, bookingBtn);
       bookingBtn.href = item.bookingUrl;
-      bookingBtn.innerHTML = `<span>Book on ${item.provider || 'Booking.com'} ($${item.totalPrice} CAD total)</span> <span>↗</span>`;
+      bookingBtn.innerHTML = `<span>Book for $${item.totalPrice} CAD Grand Total</span> <span>↗</span>`;
     }
   }
 }
@@ -103,8 +127,8 @@ function renderChart(history) {
   if (!ctx) return;
 
   const labels = history.map(h => h.dateLabel || new Date(h.timestamp).toLocaleDateString());
-  const datasetOct10 = history.map(h => h.oct10ToOct12 ? h.oct10ToOct12.pricePerNight : null);
-  const datasetOct9 = history.map(h => h.oct9ToOct12 ? h.oct9ToOct12.pricePerNight : null);
+  const datasetOct10 = history.map(h => h.oct10ToOct12 ? h.oct10ToOct12.totalPrice || h.oct10ToOct12.pricePerNight : null);
+  const datasetOct9 = history.map(h => h.oct9ToOct12 ? h.oct9ToOct12.totalPrice || h.oct9ToOct12.pricePerNight : null);
 
   new Chart(ctx, {
     type: 'line',
@@ -112,7 +136,7 @@ function renderChart(history) {
       labels: labels,
       datasets: [
         {
-          label: 'Oct 10 – Oct 12 (2 Nights)',
+          label: 'Oct 10 – Oct 12 Grand Total (2 Nights)',
           data: datasetOct10,
           borderColor: '#38bdf8',
           backgroundColor: 'rgba(56, 189, 248, 0.15)',
@@ -123,7 +147,7 @@ function renderChart(history) {
           pointHoverRadius: 6
         },
         {
-          label: 'Oct 9 – Oct 12 (3 Nights)',
+          label: 'Oct 9 – Oct 12 Grand Total (3 Nights)',
           data: datasetOct9,
           borderColor: '#fbbf24',
           backgroundColor: 'rgba(251, 191, 36, 0.15)',
@@ -150,7 +174,7 @@ function renderChart(history) {
           intersect: false,
           callbacks: {
             label: function(context) {
-              return context.raw ? `${context.dataset.label}: $${context.raw} CAD/night` : `${context.dataset.label}: Sold Out`;
+              return context.raw ? `${context.dataset.label}: $${context.raw} CAD Grand Total` : `${context.dataset.label}: Sold Out`;
             }
           }
         }
