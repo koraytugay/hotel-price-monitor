@@ -90,9 +90,7 @@ function renderCard(cardId, item) {
       `;
     }
     
-    // Detailed Breakdown HTML
-    const breakdownContainer = card.querySelector('.price-breakdown-container') || card;
-    let detailsHtml = `
+    const detailsHtml = `
       <div class="price-breakdown">
         <span class="label">Base Room Rate (${item.nights} Nights):</span>
         <span class="value">$${item.basePrice} ${item.currency}</span>
@@ -126,9 +124,18 @@ function renderChart(history) {
   const ctx = document.getElementById('priceHistoryChart');
   if (!ctx) return;
 
-  const labels = history.map(h => h.dateLabel || new Date(h.timestamp).toLocaleDateString());
-  const datasetOct10 = history.map(h => h.oct10ToOct12 ? h.oct10ToOct12.totalPrice || h.oct10ToOct12.pricePerNight : null);
-  const datasetOct9 = history.map(h => h.oct9ToOct12 ? h.oct9ToOct12.totalPrice || h.oct9ToOct12.pricePerNight : null);
+  // Deduplicate entries by dateLabel to ensure each date is shown ONLY ONCE on the X-axis
+  const uniqueMap = new Map();
+  history.forEach(entry => {
+    const label = entry.dateLabel || new Date(entry.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    uniqueMap.set(label, entry);
+  });
+
+  const uniqueHistory = Array.from(uniqueMap.values());
+  const labels = Array.from(uniqueMap.keys());
+
+  const datasetOct10 = uniqueHistory.map(h => h.oct10ToOct12 ? (h.oct10ToOct12.totalPrice || h.oct10ToOct12.pricePerNight) : null);
+  const datasetOct9 = uniqueHistory.map(h => h.oct9ToOct12 ? (h.oct9ToOct12.totalPrice || h.oct9ToOct12.pricePerNight) : null);
 
   new Chart(ctx, {
     type: 'line',
@@ -143,8 +150,8 @@ function renderChart(history) {
           borderWidth: 3,
           fill: true,
           tension: 0.3,
-          pointRadius: 4,
-          pointHoverRadius: 6
+          pointRadius: 5,
+          pointHoverRadius: 7
         },
         {
           label: 'Oct 9 – Oct 12 Grand Total (3 Nights)',
@@ -154,8 +161,8 @@ function renderChart(history) {
           borderWidth: 3,
           fill: true,
           tension: 0.3,
-          pointRadius: 4,
-          pointHoverRadius: 6
+          pointRadius: 5,
+          pointHoverRadius: 7
         }
       ]
     },

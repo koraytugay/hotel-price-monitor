@@ -1,6 +1,5 @@
 {
   "property": "Bayview Wildwood Resort, an Ascend Collection Resort",
-  "propertyId": "CNB64",
   "location": "Severn Bridge, Ontario, Canada",
   "occupancy": {
     "adults": 2,
@@ -10,7 +9,7 @@
       9
     ]
   },
-  "lastUpdated": "2026-07-26T01:55:32.045Z",
+  "lastUpdated": "2026-07-26T01:56:59.601Z",
   "current": {
     "oct10ToOct12": {
       "checkIn": "2026-10-10",
@@ -45,99 +44,7 @@
   },
   "history": [
     {
-      "timestamp": "2026-07-25T21:40:00Z",
-      "dateLabel": "Jul 25",
-      "oct10ToOct12": {
-        "pricePerNight": 349,
-        "totalPrice": 698
-      },
-      "oct9ToOct12": {
-        "pricePerNight": 329,
-        "totalPrice": 987
-      }
-    },
-    {
-      "timestamp": "2026-07-26T01:42:52.379Z",
-      "dateLabel": "Jul 25",
-      "oct10ToOct12": {
-        "pricePerNight": 353,
-        "totalPrice": 706
-      },
-      "oct9ToOct12": {
-        "pricePerNight": 325,
-        "totalPrice": 975
-      }
-    },
-    {
-      "timestamp": "2026-07-26T01:44:28.554Z",
-      "dateLabel": "Jul 25",
-      "oct10ToOct12": {
-        "pricePerNight": 344,
-        "totalPrice": 688
-      },
-      "oct9ToOct12": {
-        "pricePerNight": 325,
-        "totalPrice": 975
-      }
-    },
-    {
-      "timestamp": "2026-07-26T01:47:08.506Z",
-      "dateLabel": "Jul 25",
-      "oct10ToOct12": {
-        "pricePerNight": 349,
-        "totalPrice": 698,
-        "available": true
-      },
-      "oct9ToOct12": {
-        "pricePerNight": null,
-        "totalPrice": null,
-        "available": false
-      }
-    },
-    {
-      "timestamp": "2026-07-26T01:47:47.267Z",
-      "dateLabel": "Jul 25",
-      "oct10ToOct12": {
-        "pricePerNight": null,
-        "totalPrice": null,
-        "available": false
-      },
-      "oct9ToOct12": {
-        "pricePerNight": null,
-        "totalPrice": null,
-        "available": false
-      }
-    },
-    {
-      "timestamp": "2026-07-26T01:50:24.862Z",
-      "dateLabel": "Jul 25",
-      "oct10ToOct12": {
-        "pricePerNight": null,
-        "totalPrice": null,
-        "available": false
-      },
-      "oct9ToOct12": {
-        "pricePerNight": null,
-        "totalPrice": null,
-        "available": false
-      }
-    },
-    {
-      "timestamp": "2026-07-26T01:52:49.583Z",
-      "dateLabel": "Jul 25",
-      "oct10ToOct12": {
-        "pricePerNight": 247,
-        "totalPrice": 494,
-        "available": true
-      },
-      "oct9ToOct12": {
-        "pricePerNight": 274.33,
-        "totalPrice": 823,
-        "available": true
-      }
-    },
-    {
-      "timestamp": "2026-07-26T01:55:32.045Z",
+      "timestamp": "2026-07-26T01:56:59.601Z",
       "dateLabel": "Jul 25",
       "oct10ToOct12": {
         "pricePerNight": 473.5,

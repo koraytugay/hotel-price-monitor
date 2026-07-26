@@ -40,7 +40,6 @@ async function fetchRatesFromBookingDotCom(range) {
 
     const titleTexts = await page.locator('[data-testid="title"]').allInnerTexts().catch(() => []);
     const priceTexts = await page.locator('[data-testid="price-and-discounted-price"]').allInnerTexts().catch(() => []);
-    const taxTexts = await page.locator('[data-testid="taxes-and-charges"]').allInnerTexts().catch(() => []);
 
     for (let i = 0; i < titleTexts.length; i++) {
       if (titleTexts[i].toLowerCase().includes('bayview wildwood')) {
@@ -51,7 +50,7 @@ async function fetchRatesFromBookingDotCom(range) {
             const parsedBase = parseFloat(cleanPrice);
             if (parsedBase >= 500) {
               basePrice = parsedBase;
-              taxesAndFees = Math.round(basePrice * 0.25); // ~25% Ontario HST (13%) + Resort Fee (12%)
+              taxesAndFees = Math.round(basePrice * 0.25);
               totalPrice = basePrice + taxesAndFees;
               pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
             }
@@ -120,7 +119,7 @@ async function main() {
     existingData.history = [];
   }
 
-  existingData.history.push({
+  const newHistoryRecord = {
     timestamp: nowIso,
     dateLabel: dateLabel,
     oct10ToOct12: {
@@ -137,7 +136,15 @@ async function main() {
       taxesAndFees: results.oct9ToOct12.taxesAndFees,
       available: results.oct9ToOct12.available
     }
-  });
+  };
+
+  // Upsert history by dateLabel to ensure each date is listed ONLY ONCE
+  const existingIndex = existingData.history.findIndex(h => h.dateLabel === dateLabel);
+  if (existingIndex >= 0) {
+    existingData.history[existingIndex] = newHistoryRecord;
+  } else {
+    existingData.history.push(newHistoryRecord);
+  }
 
   if (existingData.history.length > 30) {
     existingData.history = existingData.history.slice(-30);
@@ -150,7 +157,7 @@ async function main() {
   const jsContent = `window.PRICES_DATA = ${JSON.stringify(existingData, null, 2)};`;
   fs.writeFileSync(DATA_JS_FILE, jsContent, 'utf8');
 
-  console.log('✅ Updated data/prices.json and data/prices.js with full all-inclusive tax breakdown!');
+  console.log('✅ Updated data/prices.json and data/prices.js with deduplicated history!');
 }
 
 main().catch(err => {
