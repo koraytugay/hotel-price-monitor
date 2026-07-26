@@ -79,7 +79,7 @@ jobs:
           subject: "🔔 Hotel Price Alert: Ascend Collection Resort Rate Changed!"
           to: ${{ secrets.NOTIFICATION_EMAILS || secrets.ICLOUD_EMAIL }}
           from: ${{ secrets.ICLOUD_EMAIL }}
-          html_body_file: data/email_body.html
+          html_body: file://data/email_body.html
 
   deploy-pages:
     environment:
