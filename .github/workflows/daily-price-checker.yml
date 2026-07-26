@@ -42,7 +42,15 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Price Checker
-        run: node scripts/check-prices.js
+        id: price_check
+        run: |
+          node scripts/check-prices.js
+          if [ -f "data/price_status.json" ]; then
+            CHANGED=$(node -e "console.log(JSON.parse(fs.readFileSync('data/price_status.json')).priceChanged)")
+            echo "PRICE_CHANGED=$CHANGED" >> $GITHUB_OUTPUT
+          else
+            echo "PRICE_CHANGED=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Commit and Push Updated Prices Data
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -60,38 +68,18 @@ jobs:
         with:
           path: '.'
 
-      - name: Send Email Notification via iCloud SMTP
+      - name: Send Email Alert (Only If Price Changed)
+        if: steps.price_check.outputs.PRICE_CHANGED == 'true'
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.mail.me.com
           server_port: 587
           username: ${{ secrets.ICLOUD_EMAIL }}
           password: ${{ secrets.ICLOUD_APP_PASSWORD }}
-          subject: "🏨 Bayview Wildwood Resort - Hotel Price Update"
+          subject: "🔔 Hotel Price Alert: Bayview Wildwood Resort Rate Changed!"
           to: ${{ secrets.NOTIFICATION_EMAILS || secrets.ICLOUD_EMAIL }}
           from: ${{ secrets.ICLOUD_EMAIL }}
-          html_body: |
-            <div style="font-family: Arial, sans-serif; max-width: 600px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; background-color: #f8fafc;">
-              <h2 style="color: #0f172a; margin-top: 0;">🏨 Bayview Wildwood Resort Price Monitor</h2>
-              <p style="color: #475569;"><strong>Location:</strong> Severn Bridge, ON</p>
-              <p style="color: #475569;"><strong>Occupancy:</strong> 2 Adults, 2 Children (age 9, 9)</p>
-              
-              <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
-              
-              <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 15px;">
-                <h3 style="margin-top: 0; color: #0284c7;">🗓️ Oct 10 – Oct 12 (2-Night Stay)</h3>
-                <p style="margin: 5px 0; font-size: 1.1em;"><strong>Grand Total:</strong> $947 CAD ($473.50/night)</p>
-                <p style="margin: 5px 0; color: #64748b; font-size: 0.9em;">Base Room: $758 CAD | Taxes & Fees: $189 CAD</p>
-              </div>
-
-              <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 20px;">
-                <h3 style="margin-top: 0; color: #d97706;">🗓️ Oct 9 – Oct 12 (3-Night Stay)</h3>
-                <p style="margin: 5px 0; font-size: 1.1em;"><strong>Grand Total:</strong> $1,421 CAD ($473.67/night)</p>
-                <p style="margin: 5px 0; color: #64748b; font-size: 0.9em;">Base Room: $1,137 CAD | Taxes & Fees: $284 CAD</p>
-              </div>
-
-              <a href="https://koraytugay.github.io/hotel-price-monitor/" style="display: inline-block; padding: 12px 20px; background-color: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold;">View Live Web Dashboard ↗</a>
-            </div>
+          html_body_file: data/email_body.html
 
   deploy-pages:
     environment:

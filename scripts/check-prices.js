@@ -3,11 +3,11 @@ const path = require('path');
 
 const DATA_JSON_FILE = path.join(__dirname, '../data/prices.json');
 const DATA_JS_FILE = path.join(__dirname, '../data/prices.js');
+const STATUS_JSON_FILE = path.join(__dirname, '../data/price_status.json');
+const EMAIL_BODY_FILE = path.join(__dirname, '../data/email_body.html');
 const HOTEL_NAME = 'Bayview Wildwood Resort, an Ascend Collection Resort';
 
 // Target Date Ranges for 2 Adults + 2 Kids (aged 9, 9)
-// Oct 10 - Oct 12 (2 Nights): Base CAD $758 + CAD $189 taxes/fees = CAD $947 Total
-// Oct 9 - Oct 12 (3 Nights): Base CAD $1,137 + CAD $284 taxes/fees = CAD $1,421 Total
 const TARGET_RANGES = [
   { 
     key: 'oct10ToOct12', 
@@ -34,7 +34,7 @@ const TARGET_RANGES = [
 async function fetchRatesForRange(range) {
   const bookingUrl = `https://www.booking.com/searchresults.html?ss=Bayview+Wildwood+Resort&checkin=${range.checkIn}&checkout=${range.checkOut}&group_adults=2&group_children=2&age=9&age=9`;
   
-  console.log(`Checking exact room & tax rates for ${range.checkIn} to ${range.checkOut} (${range.nights} nights)...`);
+  console.log(`Checking rates for ${range.checkIn} to ${range.checkOut} (${range.nights} nights)...`);
 
   let basePrice = range.basePrice;
   let taxesAndFees = range.taxesAndFees;
@@ -68,7 +68,6 @@ async function fetchRatesForRange(range) {
           const cleanPrice = rawPrice.replace(/[^\d]/g, '');
           if (cleanPrice) {
             const parsedBase = parseFloat(cleanPrice);
-            // Only update if it represents the full 4-person room rate
             if (parsedBase >= 700) {
               basePrice = parsedBase;
               taxesAndFees = Math.round(basePrice * 0.25);
@@ -83,7 +82,7 @@ async function fetchRatesForRange(range) {
 
     await browser.close();
   } catch (err) {
-    console.warn(`Booking.com detailed tax scraping notice for ${range.checkIn}: ${err.message}`);
+    console.warn(`Booking.com price check notice for ${range.checkIn}: ${err.message}`);
   }
 
   return {
@@ -104,7 +103,7 @@ async function fetchRatesForRange(range) {
 }
 
 async function main() {
-  console.log(`=== Starting Daily All-Inclusive Price & Tax Checker ===`);
+  console.log(`=== Starting Price & Availability Change Checker ===`);
   console.log(`Timestamp: ${new Date().toISOString()}`);
 
   let existingData = {
@@ -125,9 +124,40 @@ async function main() {
     }
   }
 
+  const prev10 = existingData.current ? existingData.current.oct10ToOct12 : null;
+  const prev9 = existingData.current ? existingData.current.oct9ToOct12 : null;
+
   const results = {};
   for (const range of TARGET_RANGES) {
     results[range.key] = await fetchRatesForRange(range);
+  }
+
+  const curr10 = results.oct10ToOct12;
+  const curr9 = results.oct9ToOct12;
+
+  let priceChanged = false;
+  let changeSummaryItems = [];
+
+  // Compare Oct 10 - Oct 12
+  if (prev10 && prev10.totalPrice !== curr10.totalPrice) {
+    priceChanged = true;
+    const diff = curr10.totalPrice - prev10.totalPrice;
+    if (diff < 0) {
+      changeSummaryItems.push(`🟢 <strong>Oct 10 – Oct 12 (2-Night Stay) DECREASED</strong> by $${Math.abs(diff)} CAD! (New total: $${curr10.totalPrice} CAD, was $${prev10.totalPrice} CAD)`);
+    } else {
+      changeSummaryItems.push(`🔺 <strong>Oct 10 – Oct 12 (2-Night Stay) INCREASED</strong> by $${diff} CAD. (New total: $${curr10.totalPrice} CAD, was $${prev10.totalPrice} CAD)`);
+    }
+  }
+
+  // Compare Oct 9 - Oct 12
+  if (prev9 && prev9.totalPrice !== curr9.totalPrice) {
+    priceChanged = true;
+    const diff = curr9.totalPrice - prev9.totalPrice;
+    if (diff < 0) {
+      changeSummaryItems.push(`🟢 <strong>Oct 9 – Oct 12 (3-Night Stay) DECREASED</strong> by $${Math.abs(diff)} CAD! (New total: $${curr9.totalPrice} CAD, was $${prev9.totalPrice} CAD)`);
+    } else {
+      changeSummaryItems.push(`🔺 <strong>Oct 9 – Oct 12 (3-Night Stay) INCREASED</strong> by $${diff} CAD. (New total: $${curr9.totalPrice} CAD, was $${prev9.totalPrice} CAD)`);
+    }
   }
 
   const nowIso = new Date().toISOString();
@@ -144,18 +174,18 @@ async function main() {
     timestamp: nowIso,
     dateLabel: dateLabel,
     oct10ToOct12: {
-      pricePerNight: results.oct10ToOct12.pricePerNight,
-      totalPrice: results.oct10ToOct12.totalPrice,
-      basePrice: results.oct10ToOct12.basePrice,
-      taxesAndFees: results.oct10ToOct12.taxesAndFees,
-      available: results.oct10ToOct12.available
+      pricePerNight: curr10.pricePerNight,
+      totalPrice: curr10.totalPrice,
+      basePrice: curr10.basePrice,
+      taxesAndFees: curr10.taxesAndFees,
+      available: curr10.available
     },
     oct9ToOct12: {
-      pricePerNight: results.oct9ToOct12.pricePerNight,
-      totalPrice: results.oct9ToOct12.totalPrice,
-      basePrice: results.oct9ToOct12.basePrice,
-      taxesAndFees: results.oct9ToOct12.taxesAndFees,
-      available: results.oct9ToOct12.available
+      pricePerNight: curr9.pricePerNight,
+      totalPrice: curr9.totalPrice,
+      basePrice: curr9.basePrice,
+      taxesAndFees: curr9.taxesAndFees,
+      available: curr9.available
     }
   };
 
@@ -177,7 +207,48 @@ async function main() {
   const jsContent = `window.PRICES_DATA = ${JSON.stringify(existingData, null, 2)};`;
   fs.writeFileSync(DATA_JS_FILE, jsContent, 'utf8');
 
-  console.log('✅ Updated data/prices.json and data/prices.js with accurate rates!');
+  // Save status file for GitHub Actions step condition
+  const statusData = {
+    priceChanged: priceChanged,
+    changeCount: changeSummaryItems.length,
+    subject: priceChanged ? "🔔 Hotel Price Alert: Price Change Detected!" : "No Price Change"
+  };
+  fs.writeFileSync(STATUS_JSON_FILE, JSON.stringify(statusData, null, 2), 'utf8');
+
+  // Build HTML email body
+  let emailHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; padding: 20px; border: 1px solid #cbd5e1; border-radius: 10px; background-color: #f8fafc;">
+      <h2 style="color: #0f172a; margin-top: 0;">🔔 Hotel Price Change Alert!</h2>
+      <p style="color: #475569;"><strong>Property:</strong> Bayview Wildwood Resort, Severn Bridge ON</p>
+      <p style="color: #475569;"><strong>Occupancy:</strong> 2 Adults, 2 Children (age 9, 9)</p>
+      
+      <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+
+      <h3 style="color: #0f172a;">Detected Price Changes:</h3>
+      <ul style="padding-left: 20px; color: #334155; line-height: 1.6;">
+        ${changeSummaryItems.map(item => `<li style="margin-bottom: 10px;">${item}</li>`).join('')}
+      </ul>
+
+      <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+
+      <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 15px;">
+        <h3 style="margin-top: 0; color: #0284c7;">🗓️ Oct 10 – Oct 12 (2-Night Stay)</h3>
+        <p style="margin: 5px 0; font-size: 1.1em;"><strong>Grand Total:</strong> $${curr10.totalPrice} CAD ($${curr10.pricePerNight}/night)</p>
+        <p style="margin: 5px 0; color: #64748b; font-size: 0.9em;">Base Room: $${curr10.basePrice} CAD | Taxes & Fees: $${curr10.taxesAndFees} CAD</p>
+      </div>
+
+      <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 20px;">
+        <h3 style="margin-top: 0; color: #d97706;">🗓️ Oct 9 – Oct 12 (3-Night Stay)</h3>
+        <p style="margin: 5px 0; font-size: 1.1em;"><strong>Grand Total:</strong> $${curr9.totalPrice} CAD ($${curr9.pricePerNight}/night)</p>
+        <p style="margin: 5px 0; color: #64748b; font-size: 0.9em;">Base Room: $${curr9.basePrice} CAD | Taxes & Fees: $${curr9.taxesAndFees} CAD</p>
+      </div>
+
+      <a href="https://koraytugay.github.io/hotel-price-monitor/" style="display: inline-block; padding: 12px 20px; background-color: #2563eb; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold;">View Live Web Dashboard ↗</a>
+    </div>
+  `;
+  fs.writeFileSync(EMAIL_BODY_FILE, emailHtml, 'utf8');
+
+  console.log(`✅ Price check completed. Price Changed: ${priceChanged}`);
 }
 
 main().catch(err => {
