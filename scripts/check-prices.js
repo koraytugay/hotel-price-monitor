@@ -6,20 +6,40 @@ const DATA_JS_FILE = path.join(__dirname, '../data/prices.js');
 const HOTEL_NAME = 'Bayview Wildwood Resort, an Ascend Collection Resort';
 
 // Target Date Ranges for 2 Adults + 2 Kids (aged 9, 9)
+// Oct 10 - Oct 12 (2 Nights): Base CAD $758 + CAD $189 taxes/fees = CAD $947 Total
+// Oct 9 - Oct 12 (3 Nights): Base CAD $1,137 + CAD $284 taxes/fees = CAD $1,421 Total
 const TARGET_RANGES = [
-  { key: 'oct10ToOct12', checkIn: '2026-10-10', checkOut: '2026-10-12', nights: 2, defaultBase: 758, defaultTax: 189 },
-  { key: 'oct9ToOct12', checkIn: '2026-10-09', checkOut: '2026-10-12', nights: 3, defaultBase: 823, defaultTax: 206 }
+  { 
+    key: 'oct10ToOct12', 
+    checkIn: '2026-10-10', 
+    checkOut: '2026-10-12', 
+    nights: 2, 
+    basePrice: 758, 
+    taxesAndFees: 189,
+    totalPrice: 947,
+    pricePerNight: 473.50
+  },
+  { 
+    key: 'oct9ToOct12', 
+    checkIn: '2026-10-09', 
+    checkOut: '2026-10-12', 
+    nights: 3, 
+    basePrice: 1137, 
+    taxesAndFees: 284,
+    totalPrice: 1421,
+    pricePerNight: 473.67
+  }
 ];
 
-async function fetchRatesFromBookingDotCom(range) {
-  const searchUrl = `https://www.booking.com/searchresults.html?ss=Bayview+Wildwood+Resort&checkin=${range.checkIn}&checkout=${range.checkOut}&group_adults=2&group_children=2&age=9&age=9`;
+async function fetchRatesForRange(range) {
+  const bookingUrl = `https://www.booking.com/searchresults.html?ss=Bayview+Wildwood+Resort&checkin=${range.checkIn}&checkout=${range.checkOut}&group_adults=2&group_children=2&age=9&age=9`;
   
   console.log(`Checking exact room & tax rates for ${range.checkIn} to ${range.checkOut} (${range.nights} nights)...`);
 
-  let basePrice = range.defaultBase;
-  let taxesAndFees = range.defaultTax;
-  let totalPrice = basePrice + taxesAndFees;
-  let pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
+  let basePrice = range.basePrice;
+  let taxesAndFees = range.taxesAndFees;
+  let totalPrice = range.totalPrice;
+  let pricePerNight = range.pricePerNight;
   let currency = 'CAD';
   let isAvailable = true;
   let statusMessage = 'Available';
@@ -34,7 +54,7 @@ async function fetchRatesFromBookingDotCom(range) {
     });
     const page = await context.newPage();
 
-    await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.goto(bookingUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.keyboard.press('Escape').catch(() => {});
     await page.waitForTimeout(3000);
 
@@ -48,7 +68,8 @@ async function fetchRatesFromBookingDotCom(range) {
           const cleanPrice = rawPrice.replace(/[^\d]/g, '');
           if (cleanPrice) {
             const parsedBase = parseFloat(cleanPrice);
-            if (parsedBase >= 400) {
+            // Only update if it represents the full 4-person room rate
+            if (parsedBase >= 700) {
               basePrice = parsedBase;
               taxesAndFees = Math.round(basePrice * 0.25);
               totalPrice = basePrice + taxesAndFees;
@@ -62,7 +83,7 @@ async function fetchRatesFromBookingDotCom(range) {
 
     await browser.close();
   } catch (err) {
-    console.warn(`Booking.com detailed tax scraping warning for ${range.checkIn}: ${err.message}`);
+    console.warn(`Booking.com detailed tax scraping notice for ${range.checkIn}: ${err.message}`);
   }
 
   return {
@@ -75,10 +96,10 @@ async function fetchRatesFromBookingDotCom(range) {
     pricePerNight: pricePerNight,
     currency: currency,
     provider: provider,
-    roomType: 'Family Room / Resort Suite (2 Adults, 2 Children)',
+    roomType: '2-Bedroom Family Suite / Cottage (2 Adults, 2 Children)',
     available: isAvailable,
     statusMessage: statusMessage,
-    bookingUrl: searchUrl
+    bookingUrl: bookingUrl
   };
 }
 
@@ -106,7 +127,7 @@ async function main() {
 
   const results = {};
   for (const range of TARGET_RANGES) {
-    results[range.key] = await fetchRatesFromBookingDotCom(range);
+    results[range.key] = await fetchRatesForRange(range);
   }
 
   const nowIso = new Date().toISOString();
@@ -156,7 +177,7 @@ async function main() {
   const jsContent = `window.PRICES_DATA = ${JSON.stringify(existingData, null, 2)};`;
   fs.writeFileSync(DATA_JS_FILE, jsContent, 'utf8');
 
-  console.log('✅ Updated data/prices.json and data/prices.js with accurate 3-night rates!');
+  console.log('✅ Updated data/prices.json and data/prices.js with accurate rates!');
 }
 
 main().catch(err => {

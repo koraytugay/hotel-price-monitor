@@ -9,19 +9,19 @@
       9
     ]
   },
-  "lastUpdated": "2026-07-26T01:59:30.547Z",
+  "lastUpdated": "2026-07-25T21:59:50Z",
   "current": {
     "oct10ToOct12": {
       "checkIn": "2026-10-10",
       "checkOut": "2026-10-12",
       "nights": 2,
-      "basePrice": 494,
-      "taxesAndFees": 124,
-      "totalPrice": 618,
-      "pricePerNight": 309,
+      "basePrice": 758,
+      "taxesAndFees": 189,
+      "totalPrice": 947,
+      "pricePerNight": 473.5,
       "currency": "CAD",
       "provider": "Booking.com / Hotel Direct",
-      "roomType": "Family Room / Resort Suite (2 Adults, 2 Children)",
+      "roomType": "2-Bedroom Family Suite / Cottage (2 Adults, 2 Children)",
       "available": true,
       "statusMessage": "Available",
       "bookingUrl": "https://www.booking.com/searchresults.html?ss=Bayview+Wildwood+Resort&checkin=2026-10-10&checkout=2026-10-12&group_adults=2&group_children=2&age=9&age=9"
@@ -30,13 +30,13 @@
       "checkIn": "2026-10-09",
       "checkOut": "2026-10-12",
       "nights": 3,
-      "basePrice": 823,
-      "taxesAndFees": 206,
-      "totalPrice": 1029,
-      "pricePerNight": 343,
+      "basePrice": 1137,
+      "taxesAndFees": 284,
+      "totalPrice": 1421,
+      "pricePerNight": 473.67,
       "currency": "CAD",
       "provider": "Booking.com / Hotel Direct",
-      "roomType": "Family Room / Resort Suite (2 Adults, 2 Children)",
+      "roomType": "2-Bedroom Family Suite / Cottage (2 Adults, 2 Children)",
       "available": true,
       "statusMessage": "Available",
       "bookingUrl": "https://www.booking.com/searchresults.html?ss=Bayview+Wildwood+Resort&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&group_children=2&age=9&age=9"
@@ -44,20 +44,20 @@
   },
   "history": [
     {
-      "timestamp": "2026-07-26T01:59:30.547Z",
+      "timestamp": "2026-07-25T21:59:50Z",
       "dateLabel": "Jul 25",
       "oct10ToOct12": {
-        "pricePerNight": 309,
-        "totalPrice": 618,
-        "basePrice": 494,
-        "taxesAndFees": 124,
+        "pricePerNight": 473.5,
+        "totalPrice": 947,
+        "basePrice": 758,
+        "taxesAndFees": 189,
         "available": true
       },
       "oct9ToOct12": {
-        "pricePerNight": 343,
-        "totalPrice": 1029,
-        "basePrice": 823,
-        "taxesAndFees": 206,
+        "pricePerNight": 473.67,
+        "totalPrice": 1421,
+        "basePrice": 1137,
+        "taxesAndFees": 284,
         "available": true
       }
     }
