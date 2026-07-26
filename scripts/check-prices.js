@@ -108,27 +108,28 @@ async function fetchRatesForPropertyAndRange(property, range) {
       await page.keyboard.press('Escape').catch(() => {});
       await page.waitForTimeout(4000);
 
-      // Parse room table prices directly from hotel detail page dynamically
-      const priceElements = await page.locator('.hprt-price-price, .bui-price-display__value, .prco-val-bui-wrapper, [data-testid="price-and-discounted-price"]').allInnerTexts().catch(() => []);
+      // Scrape room table rows explicitly (bypassing top header deal banners)
+      const roomRows = await page.locator('tbody tr, .hprt-table-row').all().catch(() => []);
+      let scrapedBase = null;
 
-      const validPrices = [];
-      for (const p of priceElements) {
-        const clean = p.replace(/[^\d]/g, '');
+      for (const row of roomRows) {
+        const priceText = await row.locator('.hprt-price-price, .bui-price-display__value, .prco-val-bui-wrapper').innerText().catch(() => '');
+        const clean = priceText.replace(/[^\d]/g, '');
         if (clean) {
           const val = parseFloat(clean);
-          if (val >= 250 && val < 5000) {
-            validPrices.push(val);
+          if (val > 250 && val < 5000) {
+            scrapedBase = val;
+            break;
           }
         }
       }
 
-      if (validPrices.length > 0) {
-        // Pick the top available rate dynamically extracted from the live page
-        basePrice = validPrices[0];
+      if (scrapedBase) {
+        basePrice = scrapedBase;
         taxesAndFees = Math.round(basePrice * property.taxRate);
         totalPrice = basePrice + taxesAndFees;
         pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
-        console.log(`  -> Dynamically scraped live rate for ${property.shortName}: CAD $${basePrice} base ($${totalPrice} total)`);
+        console.log(`  -> Dynamically scraped room table rate for ${property.shortName}: CAD $${basePrice} base ($${totalPrice} total)`);
       }
     }
 
