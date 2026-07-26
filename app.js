@@ -62,11 +62,11 @@ function renderCard(cardId, item) {
   const totalValEl = card.querySelector('.total-val');
   const bookingBtn = card.querySelector('.btn-book');
 
-  if (item.available === false || item.statusMessage === 'Sold Out') {
+  if (item.available === false) {
     card.classList.add('sold-out-card');
     if (priceWrapper) {
       priceWrapper.innerHTML = `
-        <div class="sold-out-badge" style="color: #ef4444; font-size: 2rem; font-weight: 800; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 8px; text-align: center; border: 1px solid rgba(239, 68, 68, 0.3);">
+        <div class="sold-out-badge" style="color: #ef4444; font-size: 1.8rem; font-weight: 800; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 8px; text-align: center; border: 1px solid rgba(239, 68, 68, 0.3);">
           🚫 Sold Out
         </div>
         <div class="price-unit" style="text-align: center; margin-top: 8px; color: #fca5a5;">No available rooms for these dates</div>
@@ -76,16 +76,24 @@ function renderCard(cardId, item) {
     if (totalValEl) totalValEl.textContent = 'N/A (Sold Out)';
     if (bookingBtn) {
       bookingBtn.href = item.bookingUrl || '#';
-      bookingBtn.innerHTML = `<span>Check Sold Out Details on ChoiceHotels</span> <span>↗</span>`;
+      bookingBtn.innerHTML = `<span>Check Dates on Booking.com</span> <span>↗</span>`;
       bookingBtn.style.background = 'linear-gradient(135deg, #475569 0%, #334155 100%)';
     }
   } else {
-    const priceEl = card.querySelector('.price-val');
-    if (priceEl) priceEl.textContent = `${item.pricePerNight}`;
+    card.classList.remove('sold-out-card');
+    if (priceWrapper) {
+      priceWrapper.innerHTML = `
+        <div class="price-amount">
+          <span class="currency">$</span><span class="price-val">${item.pricePerNight}</span>
+        </div>
+        <div class="price-unit">per night (CAD) • <strong style="color: #38bdf8;">via ${item.provider || 'Booking.com'}</strong></div>
+      `;
+    }
     if (nightPriceEl) nightPriceEl.textContent = `$${item.pricePerNight} CAD`;
     if (totalValEl) totalValEl.textContent = `$${item.totalPrice} ${item.currency}`;
     if (bookingBtn && item.bookingUrl) {
       bookingBtn.href = item.bookingUrl;
+      bookingBtn.innerHTML = `<span>Book on ${item.provider || 'Booking.com'} ($${item.totalPrice} CAD total)</span> <span>↗</span>`;
     }
   }
 }

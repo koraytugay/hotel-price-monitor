@@ -3,7 +3,6 @@ const path = require('path');
 
 const DATA_JSON_FILE = path.join(__dirname, '../data/prices.json');
 const DATA_JS_FILE = path.join(__dirname, '../data/prices.js');
-const PROPERTY_ID = 'CNB64';
 const HOTEL_NAME = 'Bayview Wildwood Resort, an Ascend Collection Resort';
 
 // Target Date Ranges for 2 Adults + 2 Kids (aged 9, 9)
@@ -12,59 +11,58 @@ const TARGET_RANGES = [
   { key: 'oct9ToOct12', checkIn: '2026-10-09', checkOut: '2026-10-12', nights: 3 }
 ];
 
-async function fetchRatesForRange(range) {
-  const bookingUrl = `https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/${PROPERTY_ID.toLowerCase()}/rates?checkInDate=${range.checkIn}&checkOutDate=${range.checkOut}&adults=2&children=2&ages=9,9`;
+async function fetchRatesFromBookingDotCom(range) {
+  const searchUrl = `https://www.booking.com/searchresults.html?ss=Bayview+Wildwood+Resort&checkin=${range.checkIn}&checkout=${range.checkOut}&group_adults=2&group_children=2&age=9&age=9`;
   
-  console.log(`Checking availability for ${range.checkIn} to ${range.checkOut} (${range.nights} nights)...`);
-  console.log(`URL: ${bookingUrl}`);
+  console.log(`Checking Booking.com rates for ${range.checkIn} to ${range.checkOut} (${range.nights} nights)...`);
 
   let pricePerNight = null;
   let totalPrice = null;
-  let roomType = null;
   let currency = 'CAD';
-  let isAvailable = false; // Default to false unless live price is verified
-  let statusMessage = 'Sold Out / Check ChoiceHotels';
+  let isAvailable = false;
+  let statusMessage = 'Checking...';
+  let provider = 'Booking.com';
 
   try {
     const { chromium } = require('playwright');
     const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({
-      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+      viewport: { width: 1366, height: 768 }
     });
     const page = await context.newPage();
 
-    const response = await page.goto(bookingUrl, { waitUntil: 'domcontentloaded', timeout: 20000 }).catch(() => null);
-    
-    if (response && response.status() === 200) {
-      const bodyText = await page.innerText('body').catch(() => '');
+    await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.keyboard.press('Escape').catch(() => {});
+    await page.waitForTimeout(3000);
 
-      if (bodyText.includes('sold out') || bodyText.includes('Sold Out') || bodyText.includes('no rooms available')) {
-        isAvailable = false;
-        statusMessage = 'Sold Out';
-      } else {
-        const priceText = await page.locator('[data-testid="price-amount"], .rate-amount, .price-display, .amount').first().innerText({ timeout: 4000 }).catch(() => null);
-        if (priceText) {
-          const match = priceText.match(/\d+([.,]\d+)?/);
-          if (match) {
-            pricePerNight = parseFloat(match[0].replace(',', ''));
-            totalPrice = Math.round(pricePerNight * range.nights * 100) / 100;
-            roomType = 'Standard Resort Room';
+    const titleTexts = await page.locator('[data-testid="title"]').allInnerTexts().catch(() => []);
+    const priceTexts = await page.locator('[data-testid="price-and-discounted-price"]').allInnerTexts().catch(() => []);
+
+    for (let i = 0; i < titleTexts.length; i++) {
+      if (titleTexts[i].toLowerCase().includes('bayview wildwood')) {
+        const rawPrice = priceTexts[i];
+        if (rawPrice) {
+          const cleanPrice = rawPrice.replace(/[^\d]/g, '');
+          if (cleanPrice) {
+            totalPrice = parseFloat(cleanPrice);
+            pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
             isAvailable = true;
             statusMessage = 'Available';
+            console.log(`[SUCCESS] ${titleTexts[i]} (${range.checkIn} to ${range.checkOut}): ${rawPrice} total -> $${pricePerNight} CAD/night`);
+            break;
           }
         }
       }
-    } else {
-      console.warn(`ChoiceHotels anti-bot firewall (Akamai WAF) returned HTTP ${response ? response.status() : 'Error'}.`);
-      isAvailable = false;
-      statusMessage = 'Sold Out';
     }
 
     await browser.close();
   } catch (err) {
-    console.warn(`Scraper execution notice for ${range.checkIn}: ${err.message}`);
-    isAvailable = false;
-    statusMessage = 'Sold Out';
+    console.warn(`Booking.com scraping warning for ${range.checkIn}: ${err.message}`);
+  }
+
+  if (!isAvailable) {
+    statusMessage = 'Sold Out / Unavailable';
   }
 
   return {
@@ -74,10 +72,11 @@ async function fetchRatesForRange(range) {
     pricePerNight: pricePerNight,
     totalPrice: totalPrice,
     currency: currency,
-    roomType: roomType,
+    provider: provider,
+    roomType: 'Resort Room / Cottage',
     available: isAvailable,
     statusMessage: statusMessage,
-    bookingUrl: bookingUrl
+    bookingUrl: searchUrl
   };
 }
 
@@ -87,7 +86,6 @@ async function main() {
 
   let existingData = {
     property: HOTEL_NAME,
-    propertyId: PROPERTY_ID,
     location: "Severn Bridge, Ontario, Canada",
     occupancy: { adults: 2, children: 2, childAges: [9, 9] },
     lastUpdated: new Date().toISOString(),
@@ -106,7 +104,7 @@ async function main() {
 
   const results = {};
   for (const range of TARGET_RANGES) {
-    results[range.key] = await fetchRatesForRange(range);
+    results[range.key] = await fetchRatesFromBookingDotCom(range);
   }
 
   const nowIso = new Date().toISOString();

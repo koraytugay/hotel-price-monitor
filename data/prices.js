@@ -10,31 +10,33 @@ window.PRICES_DATA = {
       9
     ]
   },
-  "lastUpdated": "2026-07-26T01:47:47.267Z",
+  "lastUpdated": "2026-07-26T01:52:49.583Z",
   "current": {
     "oct10ToOct12": {
       "checkIn": "2026-10-10",
       "checkOut": "2026-10-12",
       "nights": 2,
-      "pricePerNight": null,
-      "totalPrice": null,
+      "pricePerNight": 247,
+      "totalPrice": 494,
       "currency": "CAD",
-      "roomType": null,
-      "available": false,
-      "statusMessage": "Sold Out",
-      "bookingUrl": "https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64/rates?checkInDate=2026-10-10&checkOutDate=2026-10-12&adults=2&children=2&ages=9,9"
+      "provider": "Booking.com",
+      "roomType": "Resort Room / Cottage",
+      "available": true,
+      "statusMessage": "Available",
+      "bookingUrl": "https://www.booking.com/searchresults.html?ss=Bayview+Wildwood+Resort&checkin=2026-10-10&checkout=2026-10-12&group_adults=2&group_children=2&age=9&age=9"
     },
     "oct9ToOct12": {
       "checkIn": "2026-10-09",
       "checkOut": "2026-10-12",
       "nights": 3,
-      "pricePerNight": null,
-      "totalPrice": null,
+      "pricePerNight": 274.33,
+      "totalPrice": 823,
       "currency": "CAD",
-      "roomType": null,
-      "available": false,
-      "statusMessage": "Sold Out",
-      "bookingUrl": "https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64/rates?checkInDate=2026-10-09&checkOutDate=2026-10-12&adults=2&children=2&ages=9,9"
+      "provider": "Booking.com",
+      "roomType": "Resort Room / Cottage",
+      "available": true,
+      "statusMessage": "Available",
+      "bookingUrl": "https://www.booking.com/searchresults.html?ss=Bayview+Wildwood+Resort&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&group_children=2&age=9&age=9"
     }
   },
   "history": [
@@ -100,6 +102,34 @@ window.PRICES_DATA = {
         "pricePerNight": null,
         "totalPrice": null,
         "available": false
+      }
+    },
+    {
+      "timestamp": "2026-07-26T01:50:24.862Z",
+      "dateLabel": "Jul 25",
+      "oct10ToOct12": {
+        "pricePerNight": null,
+        "totalPrice": null,
+        "available": false
+      },
+      "oct9ToOct12": {
+        "pricePerNight": null,
+        "totalPrice": null,
+        "available": false
+      }
+    },
+    {
+      "timestamp": "2026-07-26T01:52:49.583Z",
+      "dateLabel": "Jul 25",
+      "oct10ToOct12": {
+        "pricePerNight": 247,
+        "totalPrice": 494,
+        "available": true
+      },
+      "oct9ToOct12": {
+        "pricePerNight": 274.33,
+        "totalPrice": 823,
+        "available": true
       }
     }
   ]
