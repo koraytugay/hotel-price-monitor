@@ -57,16 +57,36 @@ function renderCard(cardId, item) {
   const card = document.getElementById(cardId);
   if (!card) return;
 
-  const priceEl = card.querySelector('.price-val');
+  const priceWrapper = card.querySelector('.price-display-wrapper');
   const nightPriceEl = card.querySelector('.night-val');
   const totalValEl = card.querySelector('.total-val');
   const bookingBtn = card.querySelector('.btn-book');
 
-  if (priceEl) priceEl.textContent = `${item.pricePerNight}`;
-  if (nightPriceEl) nightPriceEl.textContent = `$${item.pricePerNight} CAD`;
-  if (totalValEl) totalValEl.textContent = `$${item.totalPrice} ${item.currency}`;
-  if (bookingBtn && item.bookingUrl) {
-    bookingBtn.href = item.bookingUrl;
+  if (item.available === false || item.statusMessage === 'Sold Out') {
+    card.classList.add('sold-out-card');
+    if (priceWrapper) {
+      priceWrapper.innerHTML = `
+        <div class="sold-out-badge" style="color: #ef4444; font-size: 2rem; font-weight: 800; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 8px; text-align: center; border: 1px solid rgba(239, 68, 68, 0.3);">
+          🚫 Sold Out
+        </div>
+        <div class="price-unit" style="text-align: center; margin-top: 8px; color: #fca5a5;">No available rooms for these dates</div>
+      `;
+    }
+    if (nightPriceEl) nightPriceEl.textContent = 'N/A';
+    if (totalValEl) totalValEl.textContent = 'N/A (Sold Out)';
+    if (bookingBtn) {
+      bookingBtn.href = item.bookingUrl || '#';
+      bookingBtn.innerHTML = `<span>Check Sold Out Details on ChoiceHotels</span> <span>↗</span>`;
+      bookingBtn.style.background = 'linear-gradient(135deg, #475569 0%, #334155 100%)';
+    }
+  } else {
+    const priceEl = card.querySelector('.price-val');
+    if (priceEl) priceEl.textContent = `${item.pricePerNight}`;
+    if (nightPriceEl) nightPriceEl.textContent = `$${item.pricePerNight} CAD`;
+    if (totalValEl) totalValEl.textContent = `$${item.totalPrice} ${item.currency}`;
+    if (bookingBtn && item.bookingUrl) {
+      bookingBtn.href = item.bookingUrl;
+    }
   }
 }
 
@@ -122,7 +142,7 @@ function renderChart(history) {
           intersect: false,
           callbacks: {
             label: function(context) {
-              return `${context.dataset.label}: $${context.raw} CAD/night`;
+              return context.raw ? `${context.dataset.label}: $${context.raw} CAD/night` : `${context.dataset.label}: Sold Out`;
             }
           }
         }

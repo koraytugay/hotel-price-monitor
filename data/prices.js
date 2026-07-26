@@ -10,7 +10,7 @@ window.PRICES_DATA = {
       9
     ]
   },
-  "lastUpdated": "2026-07-25T21:40:00Z",
+  "lastUpdated": "2026-07-26T01:47:08.506Z",
   "current": {
     "oct10ToOct12": {
       "checkIn": "2026-10-10",
@@ -19,20 +19,22 @@ window.PRICES_DATA = {
       "pricePerNight": 349,
       "totalPrice": 698,
       "currency": "CAD",
-      "roomType": "Standard Lakeview Room",
+      "roomType": "Resort Room / Cottage",
       "available": true,
-      "bookingUrl": "https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64/rates?checkInDate=2026-10-10&checkOutDate=2026-10-12&adults=2&children=2"
+      "statusMessage": "Available",
+      "bookingUrl": "https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64/rates?checkInDate=2026-10-10&checkOutDate=2026-10-12&adults=2&children=2&ages=9,9"
     },
     "oct9ToOct12": {
       "checkIn": "2026-10-09",
       "checkOut": "2026-10-12",
       "nights": 3,
-      "pricePerNight": 329,
-      "totalPrice": 987,
+      "pricePerNight": null,
+      "totalPrice": null,
       "currency": "CAD",
-      "roomType": "Standard Lakeview Room",
-      "available": true,
-      "bookingUrl": "https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64/rates?checkInDate=2026-10-09&checkOutDate=2026-10-12&adults=2&children=2"
+      "roomType": null,
+      "available": false,
+      "statusMessage": "Sold Out",
+      "bookingUrl": "https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64/rates?checkInDate=2026-10-09&checkOutDate=2026-10-12&adults=2&children=2&ages=9,9"
     }
   },
   "history": [
@@ -46,6 +48,44 @@ window.PRICES_DATA = {
       "oct9ToOct12": {
         "pricePerNight": 329,
         "totalPrice": 987
+      }
+    },
+    {
+      "timestamp": "2026-07-26T01:42:52.379Z",
+      "dateLabel": "Jul 25",
+      "oct10ToOct12": {
+        "pricePerNight": 353,
+        "totalPrice": 706
+      },
+      "oct9ToOct12": {
+        "pricePerNight": 325,
+        "totalPrice": 975
+      }
+    },
+    {
+      "timestamp": "2026-07-26T01:44:28.554Z",
+      "dateLabel": "Jul 25",
+      "oct10ToOct12": {
+        "pricePerNight": 344,
+        "totalPrice": 688
+      },
+      "oct9ToOct12": {
+        "pricePerNight": 325,
+        "totalPrice": 975
+      }
+    },
+    {
+      "timestamp": "2026-07-26T01:47:08.506Z",
+      "dateLabel": "Jul 25",
+      "oct10ToOct12": {
+        "pricePerNight": 349,
+        "totalPrice": 698,
+        "available": true
+      },
+      "oct9ToOct12": {
+        "pricePerNight": null,
+        "totalPrice": null,
+        "available": false
       }
     }
   ]
