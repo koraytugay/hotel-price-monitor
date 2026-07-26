@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bayview Wildwood Resort Price Monitor | Automated Daily Tracker</title>
+  <meta name="description" content="Daily automated room rate tracker for Bayview Wildwood Resort (Ascend Collection). Tracks cheapest room rates for 2 Adults and 2 Children for October 9-12 and October 10-12.">
+  
+  <!-- Google Fonts & Chart.js -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Hero Header -->
+    <header class="header-hero">
+      <div class="badge-tag">
+        <span class="dot"></span>
+        <span>Daily Automated Tracker</span>
+      </div>
+      <h1>Bayview Wildwood Resort</h1>
+      <p class="subtitle">Cheapest room price monitor for Ascend Hotel Collection, Severn Bridge ON</p>
+      
+      <div class="meta-info-strip">
+        <div class="meta-item" id="occupancy-badge">
+          <span>👥</span>
+          <span id="occupancy-info">2 Adults, 2 Children (age 9, 9)</span>
+        </div>
+        <div class="meta-item" id="last-updated-badge">
+          <span>🕒</span>
+          <span>Last Updated: <strong id="last-updated">Loading...</strong></span>
+        </div>
+        <div class="meta-item">
+          <span>📍</span>
+          <span>Severn Bridge, ON</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Pricing Grid -->
+    <main>
+      <div class="pricing-section-title">
+        <span>🏷️</span> Current Price Comparisons
+      </div>
+
+      <div class="pricing-grid">
+        
+        <!-- Card 1: Oct 10 - Oct 12 (2 Nights) -->
+        <article class="price-card featured" id="card-oct10-12">
+          <div class="card-header">
+            <span class="date-range-badge">2-Night Weekend Stay</span>
+            <h3>Oct 10 – Oct 12</h3>
+            <span class="nights-label">Saturday to Monday (2 Nights)</span>
+          </div>
+
+          <div class="price-display-wrapper">
+            <div class="price-amount">
+              <span class="currency">$</span><span class="price-val">---</span>
+            </div>
+            <div class="price-unit">per night (CAD)</div>
+          </div>
+
+          <div class="price-breakdown">
+            <span class="label">Nightly Rate:</span>
+            <span class="value night-val">---</span>
+          </div>
+          <div class="price-breakdown">
+            <span class="label">Total Stay Estimate:</span>
+            <span class="value total-val">---</span>
+          </div>
+
+          <a href="https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64" target="_blank" rel="noopener" class="btn-book">
+            <span>Check Availability & Book</span>
+            <span>↗</span>
+          </a>
+        </article>
+
+        <!-- Card 2: Oct 9 - Oct 12 (3 Nights) -->
+        <article class="price-card" id="card-oct9-12">
+          <div class="card-header">
+            <span class="date-range-badge" style="color: var(--accent-blue); background: rgba(56, 189, 248, 0.1);">3-Night Extended Stay</span>
+            <h3>Oct 9 – Oct 12</h3>
+            <span class="nights-label">Friday to Monday (3 Nights)</span>
+          </div>
+
+          <div class="price-display-wrapper">
+            <div class="price-amount" style="color: var(--accent-blue);">
+              <span class="currency">$</span><span class="price-val">---</span>
+            </div>
+            <div class="price-unit">per night (CAD)</div>
+          </div>
+
+          <div class="price-breakdown">
+            <span class="label">Nightly Rate:</span>
+            <span class="value night-val">---</span>
+          </div>
+          <div class="price-breakdown">
+            <span class="label">Total Stay Estimate:</span>
+            <span class="value total-val">---</span>
+          </div>
+
+          <a href="https://www.choicehotels.com/ontario/severn-bridge/ascend-hotels/cnb64" target="_blank" rel="noopener" class="btn-book">
+            <span>Check Availability & Book</span>
+            <span>↗</span>
+          </a>
+        </article>
+
+      </div>
+
+      <!-- Price History Trend Section -->
+      <section class="history-section">
+        <h2>📈 Daily Price History & Trends</h2>
+        <div class="chart-wrapper">
+          <canvas id="priceHistoryChart"></canvas>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <p>Data automatically updated daily via <a href="https://github.com" target="_blank" rel="noopener">GitHub Actions</a>. Room rates subject to change by Choice Hotels International.</p>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

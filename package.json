@@ -1,0 +1,21 @@
+{
+  "name": "hotel-price-monitor",
+  "version": "1.0.0",
+  "description": "Daily automated price checker for Bayview Wildwood Resort (Ascend Collection)",
+  "main": "scripts/check-prices.js",
+  "scripts": {
+    "start": "node scripts/check-prices.js",
+    "test": "node scripts/check-prices.js --dry-run"
+  },
+  "keywords": [
+    "github-actions",
+    "price-monitor",
+    "hotel-rates",
+    "playwright"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.42.1"
+  }
+}
