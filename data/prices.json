@@ -9,7 +9,7 @@
       9
     ]
   },
-  "lastUpdated": "2026-07-25T21:59:50Z",
+  "lastUpdated": "2026-07-26T02:15:16.286Z",
   "current": {
     "oct10ToOct12": {
       "checkIn": "2026-10-10",
@@ -46,6 +46,24 @@
     {
       "timestamp": "2026-07-25T21:59:50Z",
       "dateLabel": "Jul 25",
+      "oct10ToOct12": {
+        "pricePerNight": 473.5,
+        "totalPrice": 947,
+        "basePrice": 758,
+        "taxesAndFees": 189,
+        "available": true
+      },
+      "oct9ToOct12": {
+        "pricePerNight": 473.67,
+        "totalPrice": 1421,
+        "basePrice": 1137,
+        "taxesAndFees": 284,
+        "available": true
+      }
+    },
+    {
+      "timestamp": "2026-07-26T02:15:16.286Z",
+      "dateLabel": "Jul 26",
       "oct10ToOct12": {
         "pricePerNight": 473.5,
         "totalPrice": 947,
