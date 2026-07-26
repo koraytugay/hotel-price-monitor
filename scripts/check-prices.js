@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const DATA_FILE = path.join(__dirname, '../data/prices.json');
+const DATA_JSON_FILE = path.join(__dirname, '../data/prices.json');
+const DATA_JS_FILE = path.join(__dirname, '../data/prices.js');
 const PROPERTY_ID = 'CNB64';
 const HOTEL_NAME = 'Bayview Wildwood Resort, an Ascend Collection Resort';
 
@@ -23,7 +24,6 @@ async function fetchRatesForRange(range) {
   let currency = 'CAD';
 
   try {
-    // Attempt using Playwright browser automation if available
     const { chromium } = require('playwright');
     const browser = await chromium.launch({ headless: true });
     const context = await browser.newContext({
@@ -33,7 +33,6 @@ async function fetchRatesForRange(range) {
 
     await page.goto(bookingUrl, { waitUntil: 'networkidle', timeout: 30000 });
 
-    // Look for price elements on Choice Hotels rate page
     const priceText = await page.locator('[data-testid="price-amount"], .rate-amount, .price-display, .amount').first().innerText({ timeout: 5000 }).catch(() => null);
     if (priceText) {
       const match = priceText.match(/\d+([.,]\d+)?/);
@@ -48,12 +47,10 @@ async function fetchRatesForRange(range) {
     console.warn(`Playwright dynamic scraping warning for ${range.checkIn}: ${err.message}`);
   }
 
-  // Fallback simulation / safety guard if live page is blocked or requires captcha
   if (!pricePerNight) {
     console.log(`Using calculated market rate reference for ${range.checkIn} range.`);
-    // Base estimated market rate with slight random variance to track mock daily updates if site is shielded
     const baseRate = range.nights === 2 ? 349 : 329;
-    const variance = Math.floor(Math.random() * 11) - 5; // -5 to +5 range variation
+    const variance = Math.floor(Math.random() * 11) - 5;
     pricePerNight = baseRate + variance;
     totalPrice = pricePerNight * range.nights;
   }
@@ -85,9 +82,9 @@ async function main() {
     history: []
   };
 
-  if (fs.existsSync(DATA_FILE)) {
+  if (fs.existsSync(DATA_JSON_FILE)) {
     try {
-      const raw = fs.readFileSync(DATA_FILE, 'utf8');
+      const raw = fs.readFileSync(DATA_JSON_FILE, 'utf8');
       existingData = JSON.parse(raw);
     } catch (e) {
       console.error('Could not parse existing prices.json, starting fresh.', e.message);
@@ -109,7 +106,6 @@ async function main() {
     existingData.history = [];
   }
 
-  // Append history record
   existingData.history.push({
     timestamp: nowIso,
     dateLabel: dateLabel,
@@ -123,16 +119,20 @@ async function main() {
     }
   });
 
-  // Keep last 30 daily entries in history
   if (existingData.history.length > 30) {
     existingData.history = existingData.history.slice(-30);
   }
 
-  fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-  fs.writeFileSync(DATA_FILE, JSON.stringify(existingData, null, 2), 'utf8');
+  fs.mkdirSync(path.dirname(DATA_JSON_FILE), { recursive: true });
+  
+  // Write JSON
+  fs.writeFileSync(DATA_JSON_FILE, JSON.stringify(existingData, null, 2), 'utf8');
 
-  console.log('✅ Updated data/prices.json successfully!');
-  console.log('Summary:', JSON.stringify(results, null, 2));
+  // Write JS file for direct local browser opening (no CORS issues with file://)
+  const jsContent = `window.PRICES_DATA = ${JSON.stringify(existingData, null, 2)};`;
+  fs.writeFileSync(DATA_JS_FILE, jsContent, 'utf8');
+
+  console.log('✅ Updated data/prices.json and data/prices.js successfully!');
 }
 
 main().catch(err => {

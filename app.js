@@ -1,13 +1,22 @@
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const response = await fetch('./data/prices.json?t=' + Date.now());
-    if (!response.ok) {
-      throw new Error(`Failed to load pricing data (HTTP ${response.status})`);
+    let data = window.PRICES_DATA;
+
+    if (!data) {
+      const response = await fetch('./data/prices.json?t=' + Date.now());
+      if (!response.ok) {
+        throw new Error(`Failed to load pricing data (HTTP ${response.status})`);
+      }
+      data = await response.json();
     }
-    const data = await response.json();
-    renderDashboard(data);
+
+    if (data) {
+      renderDashboard(data);
+    } else {
+      throw new Error('No pricing data found.');
+    }
   } catch (error) {
-    console.error('Error fetching prices data:', error);
+    console.error('Error loading price data:', error);
     showErrorState(error.message);
   }
 });
@@ -53,7 +62,7 @@ function renderCard(cardId, item) {
   const totalValEl = card.querySelector('.total-val');
   const bookingBtn = card.querySelector('.btn-book');
 
-  if (priceEl) priceEl.textContent = `$${item.pricePerNight}`;
+  if (priceEl) priceEl.textContent = `${item.pricePerNight}`;
   if (nightPriceEl) nightPriceEl.textContent = `$${item.pricePerNight} CAD`;
   if (totalValEl) totalValEl.textContent = `$${item.totalPrice} ${item.currency}`;
   if (bookingBtn && item.bookingUrl) {

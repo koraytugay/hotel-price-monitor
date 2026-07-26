@@ -43,7 +43,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore(data): auto-update room prices [skip ci]"
-          file_pattern: "data/prices.json"
+          file_pattern: "data/*"
           commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
 
       - name: Setup Pages
