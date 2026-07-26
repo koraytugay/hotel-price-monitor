@@ -9,7 +9,7 @@ window.PRICES_DATA = {
       9
     ]
   },
-  "lastUpdated": "2026-07-26T08:27:07.802Z",
+  "lastUpdated": "2026-07-26T13:23:48.627Z",
   "current": {
     "oct10ToOct12": {
       "checkIn": "2026-10-10",
@@ -62,7 +62,7 @@ window.PRICES_DATA = {
       }
     },
     {
-      "timestamp": "2026-07-26T08:27:07.802Z",
+      "timestamp": "2026-07-26T13:23:48.627Z",
       "dateLabel": "Jul 26",
       "oct10ToOct12": {
         "pricePerNight": 473.5,
