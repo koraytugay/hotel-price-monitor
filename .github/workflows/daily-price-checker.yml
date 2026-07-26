@@ -61,7 +61,6 @@ jobs:
           path: '.'
 
       - name: Send Email Notification via iCloud SMTP
-        if: ${{ secrets.ICLOUD_EMAIL != '' && secrets.ICLOUD_APP_PASSWORD != '' }}
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.mail.me.com
