@@ -14,12 +14,8 @@ const PROPERTIES = [
     location: 'Severn Bridge, Ontario, Canada',
     searchQuery: 'Bayview+Wildwood+Resort',
     matchKeywords: ['bayview wildwood', 'bayview'],
-    roomType: 'Family Room / Cottage (2 Adults, 2 Children)',
-    taxRate: 0.25,
-    defaults: {
-      oct10ToOct12: { basePrice: 758, taxesAndFees: 189, totalPrice: 947, pricePerNight: 473.50 },
-      oct9ToOct12: { basePrice: 1137, taxesAndFees: 284, totalPrice: 1421, pricePerNight: 473.67 }
-    }
+    roomType: 'Queen Room with Two Queen Beds (2 Adults, 2 Children)',
+    taxRate: 0.25
   },
   {
     id: 'grandTappattoo',
@@ -29,11 +25,7 @@ const PROPERTIES = [
     searchQuery: 'The+Grand+Tappattoo+Resort',
     matchKeywords: ['grand tappattoo', 'tappattoo'],
     roomType: 'Family Suite / Lakefront Room (2 Adults, 2 Children)',
-    taxRate: 0.13,
-    defaults: {
-      oct10ToOct12: { basePrice: 577, taxesAndFees: 75, totalPrice: 652, pricePerNight: 326.00 },
-      oct9ToOct12: { basePrice: 865, taxesAndFees: 112, totalPrice: 977, pricePerNight: 325.67 }
-    }
+    taxRate: 0.13
   }
 ];
 
@@ -60,16 +52,15 @@ const TARGET_RANGES = [
 async function fetchRatesForPropertyAndRange(property, range) {
   const searchUrl = `https://www.booking.com/searchresults.html?ss=${property.searchQuery}&checkin=${range.checkIn}&checkout=${range.checkOut}&group_adults=2&group_children=2&age=9&age=9`;
   
-  console.log(`Checking rates for ${property.shortName} (${range.checkIn} to ${range.checkOut}, ${range.nights} nights)...`);
+  console.log(`Checking live rates for ${property.shortName} (${range.checkIn} to ${range.checkOut}, ${range.nights} nights)...`);
 
-  const def = property.defaults[range.key];
-  let basePrice = def.basePrice;
-  let taxesAndFees = def.taxesAndFees;
-  let totalPrice = def.totalPrice;
-  let pricePerNight = def.pricePerNight;
+  let basePrice = null;
+  let taxesAndFees = null;
+  let totalPrice = null;
+  let pricePerNight = null;
   let currency = 'CAD';
-  let isAvailable = true;
-  let statusMessage = 'Available';
+  let isAvailable = false;
+  let statusMessage = 'Checking...';
   let provider = 'Booking.com / Hotel Direct';
   let detailBookingUrl = searchUrl;
 
@@ -110,51 +101,77 @@ async function fetchRatesForPropertyAndRange(property, range) {
 
       // Scrape room table rows matching 2 adults + 2 children occupancy
       const roomRows = await page.locator('tbody tr, .hprt-table-row').all().catch(() => []);
-      let scrapedBase = null;
 
       for (const row of roomRows) {
         const text = await row.innerText().catch(() => '');
-        const priceText = await row.locator('.hprt-price-price, .bui-price-display__value, .prco-val-bui-wrapper').innerText().catch(() => '');
-        const clean = priceText.replace(/[^\d]/g, '');
+        const lowerText = text.toLowerCase();
+        
+        // Match room row that accommodates 4 guests / 2 adults 2 children
+        const is2Adults2Kids = lowerText.includes('2 adults, 2 children') || lowerText.includes('two queen') || lowerText.includes('2 queen') || lowerText.includes('family') || lowerText.includes('cottage');
+        
+        if (is2Adults2Kids) {
+          const priceText = await row.locator('.hprt-price-price, .bui-price-display__value, .prco-val-bui-wrapper').innerText().catch(() => '');
+          const clean = priceText.replace(/[^\d]/g, '');
 
-        if (clean) {
-          const val = parseFloat(clean);
-          if (val > 250 && val < 5000) {
-            // Match room row that explicitly fits 2 adults, 2 children or standard family suite
-            if (text.includes('2 adults, 2 children') || text.includes('Queen') || text.includes('Family') || text.includes('Cottage') || text.includes('Deluxe')) {
-              scrapedBase = val;
+          if (clean) {
+            const val = parseFloat(clean);
+            if (val >= 400 && val < 5000) {
+              basePrice = val;
+
+              // Extract explicit taxes & fees from row text if present
+              const taxMatch = text.match(/\+CAD\s*(\d+)/i) || text.match(/\+(\d+)\s*taxes/i);
+              if (taxMatch) {
+                taxesAndFees = parseFloat(taxMatch[1]);
+              } else {
+                taxesAndFees = Math.round(basePrice * property.taxRate);
+              }
+
+              totalPrice = basePrice + taxesAndFees;
+              pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
+              isAvailable = true;
+              statusMessage = 'Available';
+              console.log(`  -> Dynamically extracted room rate for ${property.shortName} (${range.label}): CAD $${basePrice} base + $${taxesAndFees} tax = $${totalPrice} total ($${pricePerNight}/night)`);
               break;
             }
           }
         }
       }
 
-      if (!scrapedBase && roomRows.length > 0) {
+      // Fallback if specific room text search didn't catch: grab first valid room table price >= 400
+      if (!basePrice && roomRows.length > 0) {
         for (const row of roomRows) {
+          const text = await row.innerText().catch(() => '');
           const priceText = await row.locator('.hprt-price-price, .bui-price-display__value, .prco-val-bui-wrapper').innerText().catch(() => '');
           const clean = priceText.replace(/[^\d]/g, '');
           if (clean) {
             const val = parseFloat(clean);
-            if (val > 250 && val < 5000) {
-              scrapedBase = val;
+            if (val >= 400) {
+              basePrice = val;
+              const taxMatch = text.match(/\+CAD\s*(\d+)/i) || text.match(/\+(\d+)\s*taxes/i);
+              if (taxMatch) {
+                taxesAndFees = parseFloat(taxMatch[1]);
+              } else {
+                taxesAndFees = Math.round(basePrice * property.taxRate);
+              }
+              totalPrice = basePrice + taxesAndFees;
+              pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
+              isAvailable = true;
+              statusMessage = 'Available';
+              console.log(`  -> Fallback room table rate for ${property.shortName}: CAD $${basePrice} base + $${taxesAndFees} tax = $${totalPrice} total`);
               break;
             }
           }
         }
-      }
-
-      if (scrapedBase) {
-        basePrice = scrapedBase;
-        taxesAndFees = Math.round(basePrice * property.taxRate);
-        totalPrice = basePrice + taxesAndFees;
-        pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
-        console.log(`  -> Dynamically scraped room table rate for ${property.shortName}: CAD $${basePrice} base ($${totalPrice} total)`);
       }
     }
 
     await browser.close();
   } catch (err) {
     console.warn(`Booking.com price check notice for ${property.shortName} (${range.checkIn}): ${err.message}`);
+  }
+
+  if (!isAvailable) {
+    statusMessage = 'Sold Out / Unavailable';
   }
 
   return {
@@ -206,7 +223,6 @@ async function main() {
       name: prop.name,
       shortName: prop.shortName,
       location: prop.location,
-      bookingUrl: prop.bookingUrlDirect,
       rates: {}
     };
 
@@ -217,7 +233,7 @@ async function main() {
       currentResults[prop.id].rates[range.key] = fetchedRate;
 
       const prevRate = prevRates[range.key];
-      if (prevRate && prevRate.totalPrice !== fetchedRate.totalPrice) {
+      if (prevRate && prevRate.totalPrice && fetchedRate.totalPrice && prevRate.totalPrice !== fetchedRate.totalPrice) {
         priceChanged = true;
         const diff = fetchedRate.totalPrice - prevRate.totalPrice;
         if (diff < 0) {
@@ -235,7 +251,6 @@ async function main() {
   existingData.lastUpdated = nowIso;
   existingData.properties = currentResults;
 
-  // Legacy compatibility top-level current mapping to Bayview
   if (currentResults.bayview) {
     existingData.property = currentResults.bayview.name;
     existingData.location = currentResults.bayview.location;
@@ -257,7 +272,6 @@ async function main() {
       oct10ToOct12: currentResults.grandTappattoo ? currentResults.grandTappattoo.rates.oct10ToOct12 : null,
       oct9ToOct12: currentResults.grandTappattoo ? currentResults.grandTappattoo.rates.oct9ToOct12 : null
     },
-    // legacy fallback keys
     oct10ToOct12: currentResults.bayview ? currentResults.bayview.rates.oct10ToOct12 : null,
     oct9ToOct12: currentResults.bayview ? currentResults.bayview.rates.oct9ToOct12 : null
   };
@@ -279,7 +293,6 @@ async function main() {
   const jsContent = `window.PRICES_DATA = ${JSON.stringify(existingData, null, 2)};`;
   fs.writeFileSync(DATA_JS_FILE, jsContent, 'utf8');
 
-  // Save status file for GitHub Actions step condition
   const statusData = {
     priceChanged: priceChanged,
     changeCount: changeSummaryItems.length,
@@ -287,7 +300,6 @@ async function main() {
   };
   fs.writeFileSync(STATUS_JSON_FILE, JSON.stringify(statusData, null, 2), 'utf8');
 
-  // Build HTML email body
   let emailHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 650px; padding: 20px; border: 1px solid #cbd5e1; border-radius: 10px; background-color: #f8fafc;">
       <h2 style="color: #0f172a; margin-top: 0;">🔔 Ascend Collection Resorts Price Alert!</h2>
