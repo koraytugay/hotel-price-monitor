@@ -26,6 +26,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -48,6 +50,7 @@ jobs:
           commit_message: "chore(data): auto-update room prices [skip ci]"
           file_pattern: "data/*"
           commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          push_options: '--force'
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
