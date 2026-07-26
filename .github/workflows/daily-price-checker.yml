@@ -2,8 +2,8 @@ name: Daily Hotel Price Checker & Deploy Pages
 
 on:
   schedule:
-    # Runs daily at 08:00 UTC
-    - cron: '0 8 * * *'
+    # Runs every 6 hours (00:00, 06:00, 12:00, 18:00 UTC)
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     # Allows manual triggering from GitHub Actions tab
 
