@@ -68,7 +68,7 @@ jobs:
           username: ${{ secrets.ICLOUD_EMAIL }}
           password: ${{ secrets.ICLOUD_APP_PASSWORD }}
           subject: "🏨 Bayview Wildwood Resort - Hotel Price Update"
-          to: ${{ secrets.ICLOUD_EMAIL }}
+          to: ${{ secrets.ICLOUD_EMAIL }},pppinar@gmail.com
           from: ${{ secrets.ICLOUD_EMAIL }}
           html_body: |
             <div style="font-family: Arial, sans-serif; max-width: 600px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 10px; background-color: #f8fafc;">
