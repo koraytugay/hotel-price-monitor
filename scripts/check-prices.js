@@ -16,10 +16,6 @@ const PROPERTIES = [
     matchKeywords: ['bayview wildwood', 'bayview'],
     roomType: 'Family Room / Cottage (2 Adults, 2 Children)',
     taxRate: 0.25,
-    exactBaseRates: {
-      oct10ToOct12: 758,
-      oct9ToOct12: 1137
-    },
     defaults: {
       oct10ToOct12: { basePrice: 758, taxesAndFees: 189, totalPrice: 947, pricePerNight: 473.50 },
       oct9ToOct12: { basePrice: 1137, taxesAndFees: 284, totalPrice: 1421, pricePerNight: 473.67 }
@@ -34,10 +30,6 @@ const PROPERTIES = [
     matchKeywords: ['grand tappattoo', 'tappattoo'],
     roomType: 'Family Suite / Lakefront Room (2 Adults, 2 Children)',
     taxRate: 0.13,
-    exactBaseRates: {
-      oct10ToOct12: 577,
-      oct9ToOct12: 865
-    },
     defaults: {
       oct10ToOct12: { basePrice: 577, taxesAndFees: 75, totalPrice: 652, pricePerNight: 326.00 },
       oct9ToOct12: { basePrice: 865, taxesAndFees: 112, totalPrice: 977, pricePerNight: 325.67 }
@@ -116,46 +108,28 @@ async function fetchRatesForPropertyAndRange(property, range) {
       await page.keyboard.press('Escape').catch(() => {});
       await page.waitForTimeout(4000);
 
-      // Parse room table prices directly from hotel detail page
+      // Parse room table prices directly from hotel detail page dynamically
       const priceElements = await page.locator('.hprt-price-price, .bui-price-display__value, .prco-val-bui-wrapper, [data-testid="price-and-discounted-price"]').allInnerTexts().catch(() => []);
 
-      const expectedExact = property.exactBaseRates[range.key];
-      let matchedExact = null;
-
+      const validPrices = [];
       for (const p of priceElements) {
         const clean = p.replace(/[^\d]/g, '');
         if (clean) {
           const val = parseFloat(clean);
-          if (val === expectedExact) {
-            matchedExact = val;
-            break;
+          if (val >= 250 && val < 5000) {
+            validPrices.push(val);
           }
         }
       }
 
-      if (matchedExact) {
-        basePrice = matchedExact;
-      } else {
-        // Look for price close to expected exact rate or first price in target family room range
-        const validPrices = [];
-        for (const p of priceElements) {
-          const clean = p.replace(/[^\d]/g, '');
-          if (clean) {
-            const val = parseFloat(clean);
-            if (val >= expectedExact - 50 && val <= expectedExact + 200) {
-              validPrices.push(val);
-            }
-          }
-        }
-        if (validPrices.length > 0) {
-          basePrice = validPrices[0];
-        }
+      if (validPrices.length > 0) {
+        // Pick the top available rate dynamically extracted from the live page
+        basePrice = validPrices[0];
+        taxesAndFees = Math.round(basePrice * property.taxRate);
+        totalPrice = basePrice + taxesAndFees;
+        pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
+        console.log(`  -> Dynamically scraped live rate for ${property.shortName}: CAD $${basePrice} base ($${totalPrice} total)`);
       }
-
-      taxesAndFees = Math.round(basePrice * property.taxRate);
-      totalPrice = basePrice + taxesAndFees;
-      pricePerNight = Math.round((totalPrice / range.nights) * 100) / 100;
-      console.log(`  -> Scraped live rate for ${property.shortName}: CAD $${basePrice} base ($${totalPrice} total)`);
     }
 
     await browser.close();
