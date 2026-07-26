@@ -108,18 +108,37 @@ async function fetchRatesForPropertyAndRange(property, range) {
       await page.keyboard.press('Escape').catch(() => {});
       await page.waitForTimeout(4000);
 
-      // Scrape room table rows explicitly (bypassing top header deal banners)
+      // Scrape room table rows matching 2 adults + 2 children occupancy
       const roomRows = await page.locator('tbody tr, .hprt-table-row').all().catch(() => []);
       let scrapedBase = null;
 
       for (const row of roomRows) {
+        const text = await row.innerText().catch(() => '');
         const priceText = await row.locator('.hprt-price-price, .bui-price-display__value, .prco-val-bui-wrapper').innerText().catch(() => '');
         const clean = priceText.replace(/[^\d]/g, '');
+
         if (clean) {
           const val = parseFloat(clean);
           if (val > 250 && val < 5000) {
-            scrapedBase = val;
-            break;
+            // Match room row that explicitly fits 2 adults, 2 children or standard family suite
+            if (text.includes('2 adults, 2 children') || text.includes('Queen') || text.includes('Family') || text.includes('Cottage') || text.includes('Deluxe')) {
+              scrapedBase = val;
+              break;
+            }
+          }
+        }
+      }
+
+      if (!scrapedBase && roomRows.length > 0) {
+        for (const row of roomRows) {
+          const priceText = await row.locator('.hprt-price-price, .bui-price-display__value, .prco-val-bui-wrapper').innerText().catch(() => '');
+          const clean = priceText.replace(/[^\d]/g, '');
+          if (clean) {
+            const val = parseFloat(clean);
+            if (val > 250 && val < 5000) {
+              scrapedBase = val;
+              break;
+            }
           }
         }
       }
