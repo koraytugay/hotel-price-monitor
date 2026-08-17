@@ -9,7 +9,7 @@
       9
     ]
   },
-  "lastUpdated": "2026-08-16T18:30:08.649Z",
+  "lastUpdated": "2026-08-17T01:17:33.345Z",
   "current": {
     "oct10ToOct12": {
       "checkIn": "2026-10-10",
@@ -24,7 +24,7 @@
       "roomType": "Queen Room with Two Queen Beds (2 Adults, 2 Children)",
       "available": true,
       "statusMessage": "Available",
-      "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARoiQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AoODiNQGwAIB0gIkMzY3ZDVjNjctYmM2Mi00MjljLTk1ZmItZGMwODQ0NWExYWJm2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-10&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=b49182015ac20826&srepoch=1786904965&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
+      "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AoDCidQGwAIB0gIkNWM3ZWVhOTgtYjRjYy00ZDU3LTgwNmItZGQ1YmJkY2IyYmRi2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-10&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=e26e0900d1ef008e&srepoch=1786929410&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
     },
     "oct9ToOct12": {
       "checkIn": "2026-10-09",
@@ -39,7 +39,7 @@
       "roomType": "Queen Room with Two Queen Beds (2 Adults, 2 Children)",
       "available": true,
       "statusMessage": "Available",
-      "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARoiQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4ApCDiNQGwAIB0gIkMWI0ZWE4NGItNWEwNC00NTc5LWFkMWQtYzI2NTNmOGUwNzdk2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=7bd08208500600d5&srepoch=1786904977&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
+      "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4Ao3CidQGwAIB0gIkY2EzN2Y4NGQtYWU5YS00NjkyLWI3NDctYzhiZTMyYmE0OGRl2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=eb16090687a100fa&srepoch=1786929422&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
     }
   },
   "history": [
@@ -2216,6 +2216,104 @@
         "statusMessage": "Available",
         "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARoiQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4ApCDiNQGwAIB0gIkMWI0ZWE4NGItNWEwNC00NTc5LWFkMWQtYzI2NTNmOGUwNzdk2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=7bd08208500600d5&srepoch=1786904977&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
       }
+    },
+    {
+      "timestamp": "2026-08-17T01:17:33.345Z",
+      "dateLabel": "Aug 17",
+      "bayview": {
+        "oct10ToOct12": {
+          "checkIn": "2026-10-10",
+          "checkOut": "2026-10-12",
+          "nights": 2,
+          "basePrice": 604,
+          "taxesAndFees": 151,
+          "totalPrice": 755,
+          "pricePerNight": 377.5,
+          "currency": "CAD",
+          "provider": "Booking.com / Hotel Direct",
+          "roomType": "Queen Room with Two Queen Beds (2 Adults, 2 Children)",
+          "available": true,
+          "statusMessage": "Available",
+          "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AoDCidQGwAIB0gIkNWM3ZWVhOTgtYjRjYy00ZDU3LTgwNmItZGQ1YmJkY2IyYmRi2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-10&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=e26e0900d1ef008e&srepoch=1786929410&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
+        },
+        "oct9ToOct12": {
+          "checkIn": "2026-10-09",
+          "checkOut": "2026-10-12",
+          "nights": 3,
+          "basePrice": 906,
+          "taxesAndFees": 227,
+          "totalPrice": 1133,
+          "pricePerNight": 377.67,
+          "currency": "CAD",
+          "provider": "Booking.com / Hotel Direct",
+          "roomType": "Queen Room with Two Queen Beds (2 Adults, 2 Children)",
+          "available": true,
+          "statusMessage": "Available",
+          "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4Ao3CidQGwAIB0gIkY2EzN2Y4NGQtYWU5YS00NjkyLWI3NDctYzhiZTMyYmE0OGRl2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=eb16090687a100fa&srepoch=1786929422&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
+        }
+      },
+      "grandTappattoo": {
+        "oct10ToOct12": {
+          "checkIn": "2026-10-10",
+          "checkOut": "2026-10-12",
+          "nights": 2,
+          "basePrice": 430,
+          "taxesAndFees": 56,
+          "totalPrice": 486,
+          "pricePerNight": 243,
+          "currency": "CAD",
+          "provider": "Booking.com / Hotel Direct",
+          "roomType": "Family Suite / Lakefront Room (2 Adults, 2 Children)",
+          "available": true,
+          "statusMessage": "Available",
+          "bookingUrl": "https://www.booking.com/hotel/ca/grand-tappattoo-resort.html?aid=304142&label=gen173nr-10CAQoggJCIXNlYXJjaF90aGUgZ3JhbmQgdGFwcGF0dG9vIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4ApjCidQGwAIB0gIkYTBkYWU3NDEtMzAxZC00OTk0LTlkZGQtODE2NGNlNzdkZjI32AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-10&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=65a9090c6f1801f6&srepoch=1786929433&soh=1&from=searchresults#no_availability_msg"
+        },
+        "oct9ToOct12": {
+          "checkIn": "2026-10-09",
+          "checkOut": "2026-10-12",
+          "nights": 3,
+          "basePrice": 635,
+          "taxesAndFees": 83,
+          "totalPrice": 718,
+          "pricePerNight": 239.33,
+          "currency": "CAD",
+          "provider": "Booking.com / Hotel Direct",
+          "roomType": "Family Suite / Lakefront Room (2 Adults, 2 Children)",
+          "available": true,
+          "statusMessage": "Available",
+          "bookingUrl": "https://www.booking.com/hotel/ca/grand-tappattoo-resort.html?aid=304142&label=gen173nr-10CAQoggJCIXNlYXJjaF90aGUgZ3JhbmQgdGFwcGF0dG9vIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AqPCidQGwAIB0gIkZDdhNDg1NGQtZjBhOC00M2NjLWJiODAtNDQ5ZTIzMGE3Mjk32AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=38a4091169c6000a&srepoch=1786929445&soh=1&from=searchresults#no_availability_msg"
+        }
+      },
+      "oct10ToOct12": {
+        "checkIn": "2026-10-10",
+        "checkOut": "2026-10-12",
+        "nights": 2,
+        "basePrice": 604,
+        "taxesAndFees": 151,
+        "totalPrice": 755,
+        "pricePerNight": 377.5,
+        "currency": "CAD",
+        "provider": "Booking.com / Hotel Direct",
+        "roomType": "Queen Room with Two Queen Beds (2 Adults, 2 Children)",
+        "available": true,
+        "statusMessage": "Available",
+        "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AoDCidQGwAIB0gIkNWM3ZWVhOTgtYjRjYy00ZDU3LTgwNmItZGQ1YmJkY2IyYmRi2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-10&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=e26e0900d1ef008e&srepoch=1786929410&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
+      },
+      "oct9ToOct12": {
+        "checkIn": "2026-10-09",
+        "checkOut": "2026-10-12",
+        "nights": 3,
+        "basePrice": 906,
+        "taxesAndFees": 227,
+        "totalPrice": 1133,
+        "pricePerNight": 377.67,
+        "currency": "CAD",
+        "provider": "Booking.com / Hotel Direct",
+        "roomType": "Queen Room with Two Queen Beds (2 Adults, 2 Children)",
+        "available": true,
+        "statusMessage": "Available",
+        "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4Ao3CidQGwAIB0gIkY2EzN2Y4NGQtYWU5YS00NjkyLWI3NDctYzhiZTMyYmE0OGRl2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=eb16090687a100fa&srepoch=1786929422&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
+      }
     }
   ],
   "properties": {
@@ -2238,7 +2336,7 @@
           "roomType": "Queen Room with Two Queen Beds (2 Adults, 2 Children)",
           "available": true,
           "statusMessage": "Available",
-          "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARoiQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AoODiNQGwAIB0gIkMzY3ZDVjNjctYmM2Mi00MjljLTk1ZmItZGMwODQ0NWExYWJm2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-10&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=b49182015ac20826&srepoch=1786904965&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
+          "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AoDCidQGwAIB0gIkNWM3ZWVhOTgtYjRjYy00ZDU3LTgwNmItZGQ1YmJkY2IyYmRi2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-10&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=e26e0900d1ef008e&srepoch=1786929410&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
         },
         "oct9ToOct12": {
           "checkIn": "2026-10-09",
@@ -2253,7 +2351,7 @@
           "roomType": "Queen Room with Two Queen Beds (2 Adults, 2 Children)",
           "available": true,
           "statusMessage": "Available",
-          "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARoiQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4ApCDiNQGwAIB0gIkMWI0ZWE4NGItNWEwNC00NTc5LWFkMWQtYzI2NTNmOGUwNzdk2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=7bd08208500600d5&srepoch=1786904977&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
+          "bookingUrl": "https://www.booking.com/hotel/ca/bayview-wildwood-resort.html?aid=304142&label=gen173nr-10CAQoggJCHnNlYXJjaF9iYXl2aWV3IHdpbGR3b29kIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4Ao3CidQGwAIB0gIkY2EzN2Y4NGQtYWU5YS00NjkyLWI3NDctYzhiZTMyYmE0OGRl2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=eb16090687a100fa&srepoch=1786929422&soh=1&from_sustainable_property_sr=1&from=searchresults#no_availability_msg"
         }
       }
     },
@@ -2276,7 +2374,7 @@
           "roomType": "Family Suite / Lakefront Room (2 Adults, 2 Children)",
           "available": true,
           "statusMessage": "Available",
-          "bookingUrl": "https://www.booking.com/hotel/ca/grand-tappattoo-resort.html?aid=304142&label=gen173nr-10CAQoggJCIXNlYXJjaF90aGUgZ3JhbmQgdGFwcGF0dG9vIHJlc29ydEgzWARoiQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4ApuDiNQGwAIB0gIkOTYzOTEwY2UtODZiNy00ZWEyLWFlMGItZGQyYzY4ODRkOWNk2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-10&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=1f98820d9bf405d7&srepoch=1786904988&soh=1&from=searchresults#no_availability_msg"
+          "bookingUrl": "https://www.booking.com/hotel/ca/grand-tappattoo-resort.html?aid=304142&label=gen173nr-10CAQoggJCIXNlYXJjaF90aGUgZ3JhbmQgdGFwcGF0dG9vIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4ApjCidQGwAIB0gIkYTBkYWU3NDEtMzAxZC00OTk0LTlkZGQtODE2NGNlNzdkZjI32AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-10&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=65a9090c6f1801f6&srepoch=1786929433&soh=1&from=searchresults#no_availability_msg"
         },
         "oct9ToOct12": {
           "checkIn": "2026-10-09",
@@ -2291,7 +2389,7 @@
           "roomType": "Family Suite / Lakefront Room (2 Adults, 2 Children)",
           "available": true,
           "statusMessage": "Available",
-          "bookingUrl": "https://www.booking.com/hotel/ca/grand-tappattoo-resort.html?aid=304142&label=gen173nr-10CAQoggJCIXNlYXJjaF90aGUgZ3JhbmQgdGFwcGF0dG9vIHJlc29ydEgzWARoiQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AqaDiNQGwAIB0gIkODcxMDUwZjktM2FjMy00NWFhLWI0ZTEtZjcyZjQ3NWQ3NzBj2AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=56ae82133451011a&srepoch=1786904999&soh=1&from=searchresults#no_availability_msg"
+          "bookingUrl": "https://www.booking.com/hotel/ca/grand-tappattoo-resort.html?aid=304142&label=gen173nr-10CAQoggJCIXNlYXJjaF90aGUgZ3JhbmQgdGFwcGF0dG9vIHJlc29ydEgzWARokQKIAQGYATO4AQfIAQzYAQPoAQH4AQGIAgGoAgG4AqPCidQGwAIB0gIkZDdhNDg1NGQtZjBhOC00M2NjLWJiODAtNDQ5ZTIzMGE3Mjk32AIB4AIB&ucfs=1&arphpl=1&checkin=2026-10-09&checkout=2026-10-12&group_adults=2&req_adults=2&no_rooms=1&group_children=2&req_children=2&age=9&req_age=9&age=9&req_age=9&hpos=1&hapos=1&sr_order=popularity&srpvid=38a4091169c6000a&srepoch=1786929445&soh=1&from=searchresults#no_availability_msg"
         }
       }
     }
