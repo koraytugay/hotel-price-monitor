@@ -1,5 +1,5 @@
 {
-  "priceChanged": false,
-  "changeCount": 0,
-  "subject": "No Price Change"
+  "priceChanged": true,
+  "changeCount": 1,
+  "subject": "🔔 Hotel Price Alert: Rate Change Detected!"
 }
